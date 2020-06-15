@@ -3,13 +3,13 @@ from django.db import models
 # Camera model.
 class Camera(models.Model):
     camera_type = models.CharField(max_length=200)
-    sensorw = models.DecimalField()           
-    sensorh = models.DecimalField()
+    sensorw = models.FloatField()          
+    sensorh = models.FloatField()
     pixelw  = models.IntegerField()
     pixelh = models.IntegerField()
-    mpixel = models.DecimalField() 
-    lensFocal = models.DecimalField() 
-    imageSize = models.DecimalField() 
+    mpixel = models.FloatField()
+    lensFocal = models.FloatField() 
+    imageSize = models.FloatField() 
     comments = models.CharField(max_length=200)
     
     def __str__(self):
