@@ -10,7 +10,7 @@ class Camera(models.Model):
     mpixel = models.FloatField()
     lensFocal = models.FloatField() 
     imageSize = models.FloatField() 
-    comments = models.CharField(max_length=200)
+    comments = models.CharField(max_length=200,blank=True)
     
     def __str__(self):
         return self.camera_type
