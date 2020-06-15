@@ -23,3 +23,19 @@ class SurveyType(models.Model):
 
     def __str__(self):
         return self.name
+
+class Drone(models.Model):
+    name = models.CharField(max_length=30)
+    cruiseSpeed = models.FloatField()
+    flightTime =models.FloatField()
+    pricing = models.IntegerField()
+    comments = models.CharField(max_length=20,blank=True)
+    def __str__(self):
+        return self.name
+
+class BudgetItem(models.Model):
+    name = models.CharField(max_length=50)
+    unit = models.FloatField()
+    unitCost = models.IntegerField()
+    def __str__(self):
+        return self.name
