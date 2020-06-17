@@ -39,3 +39,4 @@ class BudgetItem(models.Model):
     unitCost = models.IntegerField()
     def __str__(self):
         return self.name
+
