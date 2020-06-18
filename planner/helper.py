@@ -101,4 +101,16 @@ class Calculations(object):
 
     def get_num_of_gigapixels(self):
         return (self.get_total_num_of_photos()* self.lat_dimension_of_sensor_px()* self.fwd_dimension_of_sensor_px)/pow(10,9)
+
+#Processing information sheet
+    def estimated_file_size(self):
+        return round((4/650)*self.get_total_num_of_photos(),2)
+
+    def estimated_size_per_mb(self):
+        selected_camera = Camera.objects.get(pk=self.camera_id)
+        if(selected_camera):
+            return selected_camera.imageSize
+
+    def per_image(self):
+        return round(self.estimated_size_per_mb()/2,2)
      
