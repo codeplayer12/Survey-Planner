@@ -32,6 +32,7 @@ class Calculations(object):
             self.fwd_dimension_of_sensor_px = selected_camera.pixelh  
             self.lat_dimension_of_sensor_mm = selected_camera.sensorw
             self.fwd_dimension_of_sensor_mm = selected_camera.sensorh   
+            self.image_size = selected_camera.imageSize;
             # print(selected_camera)
             # print("focal length : "+str(self.focal_length))
             # print("lateral dimension of sensor px : "+str(self.lat_dimension_of_sensor_px))  
@@ -142,6 +143,18 @@ class Calculations(object):
      
     def get_number_of_flights(self):
         return round(self.get_f_thirteen()/self.distance_travelled_per_flight,0)
+
+    #Processing information sheet
+    def estimated_file_size(self):
+        return round((4/650)*self.get_total_num_of_photos(),2)
+
+    # def estimated_size_per_mb(self):
+    #     selected_camera = Camera.objects.get(pk=self.camera_id)
+    #     if(selected_camera):
+    #         return selected_camera.imageSize
+
+    def per_image(self):
+        return round(self.image_size/2,2)    
  
     def get_planner_display_values(self):
         orthophoto_resolution = round((self.get_pixel_ground_coverage_cm_lateral()+self.get_pixel_ground_coverage_cm_lateral())/2,1)
@@ -149,6 +162,8 @@ class Calculations(object):
         total_number_of_images_captured = self.get_total_num_of_photos()
         number_of_gigapixels = self.get_num_of_gigapixels()
         number_of_flights = self.get_number_of_flights()
+        total_size_of_digital_files = round((total_number_of_images_captured*self.per_image())/1000,1)
+
         # print("{:.2f}".format(orthophoto_resolution))
 
         obj = { 
@@ -156,7 +171,8 @@ class Calculations(object):
             "ortho_reso": orthophoto_resolution,
             "dsm_reso ":dsm_resolution,
             "num_images_captured":total_number_of_images_captured,
-            "num_gigapixel":number_of_gigapixels
+            "num_gigapixel":number_of_gigapixels,
+            "total_digital_files":total_size_of_digital_files
         }
         return json.dumps(obj)
         # print("Number of flights : "+str(number_of_flights))
