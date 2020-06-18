@@ -9,5 +9,5 @@ admin.site.site_title = "Survey Planner | Budget Calculator"
 admin.site.index_title = "Survey Planner"
 
 urlpatterns = [
-    # path('', views.index, name='index'),
+    path('', views.index, name='index'),
 ]
