@@ -2,7 +2,7 @@ from .models import Camera,SurveyType
 from math import atan,degrees,radians,tan,sqrt,ceil
 import logging
 import json
-
+    
 class Calculations(object):
 
     def __init__(self,camera_id,survey_type_id,bttry_capacity,flight_height,take_of_area_distance,area_size,distance_travelled_per_flight):
@@ -32,7 +32,7 @@ class Calculations(object):
             self.fwd_dimension_of_sensor_px = selected_camera.pixelh  
             self.lat_dimension_of_sensor_mm = selected_camera.sensorw
             self.fwd_dimension_of_sensor_mm = selected_camera.sensorh   
-            self.image_size = selected_camera.imageSize;
+            self.image_size = selected_camera.imageSize
             # print(selected_camera)
             # print("focal length : "+str(self.focal_length))
             # print("lateral dimension of sensor px : "+str(self.lat_dimension_of_sensor_px))  
@@ -163,6 +163,7 @@ class Calculations(object):
         number_of_gigapixels = self.get_num_of_gigapixels()
         number_of_flights = self.get_number_of_flights()
         total_size_of_digital_files = round((total_number_of_images_captured*self.per_image())/1000,1)
+        duration_of_mission = ceil(number_of_flights/4)
 
         # print("{:.2f}".format(orthophoto_resolution))
 
@@ -172,7 +173,15 @@ class Calculations(object):
             "dsm_reso":dsm_resolution,
             "num_images_captured":total_number_of_images_captured,
             "num_gigapixel":number_of_gigapixels,
-            "total_digital_files":total_size_of_digital_files
+            "total_digital_files":total_size_of_digital_files,
+            "camera_id":self.camera_id,
+            "survey_id":self.survey_type_id,
+            "battery_capacity" :self.bttry_capacity,
+            "flight_height":self.flight_height ,
+            "take_of_area":self.take_of_area_distance ,
+            "area_size":self.area_size , 
+            "distance_travelled":self.distance_travelled_per_flight,
+            "duration_mission":duration_of_mission
         }
         return json.dumps(obj)
         # print("Number of flights : "+str(number_of_flights))
@@ -182,3 +191,5 @@ class Calculations(object):
         # print('Number of gigapixel : '+ str(number_of_gigapixels))
         # print("pixel ground coverage lateral : "+str(self.get_pixel_ground_coverage_cm_lateral()) +"\n") 
         # + ("pixel ground coverage forward : "+str(self.get_pixel_ground_coverage_cm_forward()))
+
+
