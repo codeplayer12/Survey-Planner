@@ -26,11 +26,8 @@ def index(request):
         take_of_area_distance = 5
         cal = Calculations(camera_id,survey_type_id,bttry_capacity,flight_height,take_of_area_distance,area_size,distance_travelled_per_flight)
         planner_values = cal.get_planner_display_values()    
-        # return HttpResponse(planner_values, content_type='application/json') 
-        # 
-        print(planner_values)
-        context = {'planner_values': planner_values}  
-        return render(request, 'planner/index.html', context) 
+        # return HttpResponse(planner_values, content_type='application/json')   
+        return render(request, 'planner/index.html', {'planner_values': planner_values}) 
     except Exception as e:
         return HttpResponse( str(e))
 
