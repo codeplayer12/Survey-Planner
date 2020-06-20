@@ -167,9 +167,9 @@ class Calculations(object):
         # print("{:.2f}".format(orthophoto_resolution))
 
         obj = { 
-            "num_of_flights ":number_of_flights,
+            "num_of_flights":number_of_flights,
             "ortho_reso": orthophoto_resolution,
-            "dsm_reso ":dsm_resolution,
+            "dsm_reso":dsm_resolution,
             "num_images_captured":total_number_of_images_captured,
             "num_gigapixel":number_of_gigapixels,
             "total_digital_files":total_size_of_digital_files
