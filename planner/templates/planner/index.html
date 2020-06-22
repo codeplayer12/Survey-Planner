@@ -84,7 +84,7 @@
       </div>
       <div class="col-md-8 order-md-1">
         <form action="{% url 'index'%}" class="card p-2" method="POST"> {% csrf_token %}
-          <h3 class="mb-3">Drone Type</h3>
+          <h3 class="mb-3 text-muted">Drone Type</h3>
           <div class="form-group row">
             <label for="lastName" class="col-sm-6 col-form-label">Drone model</label>
             <div class="col-sm-6">
@@ -113,7 +113,7 @@
             </div>
           </div>
           <hr class="mb-4">
-          <h3 class="mb-3">Flight Parameters</h3>
+          <h3 class="mb-3 text-muted">Flight Parameters</h3>
           <div class="form-group row">
             <label for="flight_height" class="col-sm-6 col-form-label">Flight height above ground(meters)</label>
             <div class="col-sm-6">
@@ -143,7 +143,7 @@
             </div>
           </div>
           <hr class="mb-4">
-          <h3 class="mb-3">Survey Parameters</h3>
+          <h3 class="mb-3 text-muted">Survey Parameters</h3>
           <div class="form-group row">
             <label for="lastName" class="col-sm-6 col-form-label">Area size and units</label>
             <div class="col-sm-3">
