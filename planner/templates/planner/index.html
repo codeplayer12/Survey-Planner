@@ -10,8 +10,7 @@
 <body class="bg-light">
   <div class="container">
     <div class="py-5 text-center">
-      <h2>Budget Calculator</h2>  
-        
+      <h2>Budget Calculator</h2>       
     </div>
     <div class="row">
       <div class="col-md-4 order-md-2 mb-4">
@@ -57,7 +56,7 @@
         <ul class="list-group mb-3">
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
-              <h6 class="my-0">Total size of digital files</h6>
+              <h6 class="my-0">Total size of digital files (GB)</h6>
             </div>
             <span class="text-muted">{{ planner_values.total_digital_files }}</span>
           </li>
@@ -81,60 +80,106 @@
       <div class="col-md-8 order-md-1">
         <form action="{% url 'index'%}" class="card p-2" method="POST"> {% csrf_token %}
           <h3>Drone Type</h3>          
-          <div class="input-group">            
-            <label for="lastName">Choose drone model</label>
-            <select name="drone" class="custom-select d-block w-100" onselect="get_drone_details()" id="drone" >
+          <div class="form-group row">            
+            <label for="lastName" class="col-sm-6 col-form-label">Drone model</label>
+            <div class="col-sm-6">
+            <select name="drone" class="custom-select d-block w-100 form-control" onselect="get_drone_details()" id="drone" >
               {% for el in drones %}              
                 {% if select_drone.id == el.id %}
                 <option value={{el.id}} selected>{{el.name}}</option>
                 {% endif %}
                 <option value={{el.id}} >{{el.name}}</option>
               {% endfor %}
-            </select>            
+            </select> 
+            </div>           
           </div>
-          <label for="lastName">Choose camera model</label>
-          <select name="camera" class="custom-select d-block w-100">
+          <div class="form-group row">   
+          <label for="lastName" class="col-sm-6 col-form-label">Camera model</label>
+          <div class="col-sm-6">
+          <select name="camera" class="custom-select d-block w-100 form-control" >
              {% for el in cameras %}
-                {% if planner_values.camera_id == el.id %}
+                {% if select_camera.id == el.id %}
                 <option value={{el.id}} selected>{{el.camera_type}}</option>
                 {% endif %}
                 <option value={{el.id}}>{{el.camera_type}}</option>
               {% endfor %}
           </select>
-          <br>
+          </div>
+          </div>
+          <hr class="mb-4">
           <h3>Flight Parameters</h3>
-          <label for="lastName">Enter flight height in meters above ground</label>
-          <input type="number" name="flight_height" value="{{planner_values.flight_height}}" min="0" id="flight_height">
-          <label for="lastName">Drone autonomy in minutes</label>
-          <input type="number" min="0" disabled value="{{ select_drone.flightTime}}" id="flightTime">
-          <label for="lastName">Drone flight speed in meters per second</label>
-          <input type="number" min="0" disabled value="{{ select_drone.cruiseSpeed}}" id="cruiseSpeed">
-          <label for="lastName">Choose battery capacity safety margin</label>
-          <input type="number" min="0" name="battery_capacity" max="100" value="{{planner_values.battery_capacity}}" id="battery_capacity"> 
+          
+          <div class="form-group row">   
+          <label for="flight_height" class="col-sm-6 col-form-label">Flight height above ground(meters)</label>
+          <div class="col-sm-6">     
+          <input type="number"  class="form-control" name="flight_height" value="{{planner_values.flight_height}}" min="0" id="flight_height" required>
+            </div>
+          </div>
+          <div class="form-group row">
+          <label for="lastName" class="col-sm-6 col-form-label">Drone autonomy (minutes)</label>
+          <div class="col-sm-6">
+          <input type="number" class="form-control" min="0" disabled value="{{ select_drone.flightTime}}" id="flightTime">
+          </div>
+          </div>
+          <div class="form-group row">
+          <label for="lastName" class="col-sm-6 col-form-label">Drone flight speed (meters per second)</label>
+          <div class="col-sm-6">
+          <input type="number" class="form-control" min="0" disabled value="{{ select_drone.cruiseSpeed}}" id="cruiseSpeed">
+          </div>
+          </div>
+          <div class="form-group row">
+          <label for="lastName" class="col-sm-6 col-form-label">Battery capacity safety margin (%)</label>
+          <div class="col-sm-6">
+          <input type="number" class="form-control" min="0" name="battery_capacity" max="100" value="{{planner_values.battery_capacity}}" id="battery_capacity"> 
+          </div>
+          </div>
+          <hr class="mb-4">
           <h3>Survey Parameters</h3>
-          <label for="lastName">Enter area size and units</label>
-          <input type="number" name="area_size" min="0" value="{{planner_values.area_size}}" >
-          <select name="units" class="custom-select d-block w-100">
+          <div class="form-group row">
+          <label for="lastName" class="col-sm-6 col-form-label">Area size and units</label>
+          <div class="col-sm-3">
+          <input type="number" class="form-control" name="area_size" min="0" value="{{planner_values.area_size}}" >
+          </div>
+          <div class="col-sm-3">
+          <select name="units" class="custom-select d-block w-100 form-control">
             <option value="meters" selected>m^2</option>
             <option value="kilometres">km2</option>
             <option value="acres">ar</option>
             <option value="hactares">ha</option>
           </select>
-          <labell for="lastName">Choose survey type</labell>
-          <select name="survey_select" class="custom-select d-block w-100" id="survey_select">
+          </div>
+          </div>
+          <div class="form-group row">
+          <label for="lastName" class="col-sm-6 col-form-label">Survey type</label>
+          <div class="col-sm-6">
+          <select name="survey_select" class="custom-select d-block w-100 form-control" id="survey_select">
            {% for el in surveys %}
-              {% if planner_values.survey_id == el.id %}
+              {% if select_survey.id == el.id %}
                 <option value={{el.id}} selected>{{el.name}}</option>
               {% endif %}
                 <option value={{el.id}}>{{el.name}}</option>
            {% endfor %}   
           </select>
-          <label for="lastName">Desired forward image overlap</label>
-          <input type="number" name"forward"  min="0"  value="{{select.forward}}" id="forward" disabled> 
-          <label for="lastName">Desired lateral image overlap</label>
-          <input type="number" name="lateral" min="0" value="{{select.lateral}}" id="lateral" disabled>
-          <label for="lastName">Enter distance from take-off to survey area</label>
-          <input type="number" name="take_of_area" value="{{planner_values.take_of_area}}" id="take_of_area" min="0">
+          </div>
+          </div>
+          <div class="form-group row">
+          <label for="lastName" class="col-sm-6 col-form-label">Forward image overlap</label>
+          <div class="col-sm-6">
+          <input type="number" class="form-control" name"forward"  min="0"  value="{{select_survey.forward}}" id="forward" disabled> 
+          </div>
+          </div>
+          <div class="form-group row">
+          <label for="lastName" class="col-sm-6 col-form-label">Lateral image overlap</label>
+          <div class="col-sm-6">
+          <input type="number" class="form-control" name="lateral" min="0" value="{{select_survey.lateral}}" id="lateral" disabled>
+          </div>
+          </div>
+          <div class="form-group row">
+          <label for="lastName" class="col-sm-6 col-form-label">Enter distance from take-off to survey area</label>
+          <div class="col-sm-6">
+          <input type="number" class="form-control" name="take_of_area" value="{{planner_values.take_of_area}}" id="take_of_area" min="0">
+          </div>
+          </div>
           <hr class="mb-4">
           <button class="btn btn-primary btn-lg btn-block" type="submit">Calculate mission estimates</button>
         </form>

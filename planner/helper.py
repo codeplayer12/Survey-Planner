@@ -142,7 +142,7 @@ class Calculations(object):
         return round((self.get_total_num_of_photos()* self.lat_dimension_of_sensor_px* self.fwd_dimension_of_sensor_px)/(10**9),1)
      
     def get_number_of_flights(self):
-        return round(self.get_f_thirteen()/self.distance_travelled_per_flight,0)
+        return ceil(self.get_f_thirteen()/self.distance_travelled_per_flight)
 
     #Processing information sheet
     def estimated_file_size(self):
@@ -174,8 +174,6 @@ class Calculations(object):
             "num_images_captured":total_number_of_images_captured,
             "num_gigapixel":number_of_gigapixels,
             "total_digital_files":total_size_of_digital_files,
-            "camera_id":self.camera_id,
-            "survey_id":self.survey_type_id,
             "battery_capacity" :self.bttry_capacity,
             "flight_height":self.flight_height ,
             "take_of_area":self.take_of_area_distance ,

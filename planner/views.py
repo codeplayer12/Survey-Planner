@@ -28,10 +28,15 @@ def index(request):
        drones = Drone.objects.all()
        surveys = SurveyType.objects.all() 
 
+    #    print("Camera id "+str(camera_id))
+    #    print(planner_values)
+
        select_survey = surveys.get(id = survey_type_id)
        select_drone = drones.get(id=drone_id)
+       select_camera = cameras.get(id=camera_id)
        return render(request, 'planner/index.html',
-       {'planner_values': planner_values,'cameras':cameras,'drones':drones,'surveys':surveys,'select_drone':select_drone,'select' :select_survey}) 
+       {'planner_values': planner_values,'cameras':cameras,'drones':drones,'surveys':surveys,'select_drone':select_drone,
+       'select_survey' :select_survey,'select_camera':select_camera}) 
     # except Exception as e:
     #     return HttpResponse( str(e))
 
@@ -53,11 +58,13 @@ def index(request):
         distance_travelled_per_flight =  20988.14 
         take_of_area_distance = 5
         select_survey = surveys.get(id = survey_type_id)
-        select_drone = drones.get(id=drone_id)        
+        select_drone = drones.get(id=drone_id)   
+        select_camera = cameras.get(id=camera_id)     
         cal = Calculations(camera_id,survey_type_id,bttry_capacity,flight_height,take_of_area_distance,area_size,distance_travelled_per_flight)
         planner_values = json.loads(cal.get_planner_display_values())    
         return render(request, 'planner/index.html',
-        {'planner_values': planner_values,'cameras':cameras,'drones':drones,'surveys':surveys,'select_drone':select_drone,'select' :select_survey}) 
+        {'planner_values': planner_values,'cameras':cameras,'drones':drones,'surveys':surveys,'select_drone':select_drone,
+        'select_survey' :select_survey,'select_camera':select_camera}) 
     except Exception as e:
         return HttpResponse( str(e))
 
