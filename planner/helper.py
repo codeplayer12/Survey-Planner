@@ -33,7 +33,7 @@ class Calculations(object):
             self.lat_dimension_of_sensor_mm = selected_camera.sensorw
             self.fwd_dimension_of_sensor_mm = selected_camera.sensorh   
             self.image_size = selected_camera.imageSize
-            # print(selected_camera)
+            print(selected_camera)
             # print("focal length : "+str(self.focal_length))
             # print("lateral dimension of sensor px : "+str(self.lat_dimension_of_sensor_px))  
             # print("forward dimension of sensor px : "+str(self.fwd_dimension_of_sensor_px))           
@@ -174,8 +174,6 @@ class Calculations(object):
             "num_images_captured":total_number_of_images_captured,
             "num_gigapixel":number_of_gigapixels,
             "total_digital_files":total_size_of_digital_files,
-            "camera_id":self.camera_id,
-            "survey_id":self.survey_type_id,
             "battery_capacity" :self.bttry_capacity,
             "flight_height":self.flight_height ,
             "take_of_area":self.take_of_area_distance ,

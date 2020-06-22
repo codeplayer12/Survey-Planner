@@ -10,8 +10,7 @@
 <body class="bg-light">
   <div class="container">
     <div class="py-5 text-center">
-      <h2>Budget Calculator</h2>  
-        
+      <h2>Budget Calculator</h2>       
     </div>
     <div class="row">
       <div class="col-md-4 order-md-2 mb-4">
@@ -95,7 +94,7 @@
           <label for="lastName">Choose camera model</label>
           <select name="camera" class="custom-select d-block w-100">
              {% for el in cameras %}
-                {% if planner_values.camera_id == el.id %}
+                {% if select_camera.id == el.id %}
                 <option value={{el.id}} selected>{{el.camera_type}}</option>
                 {% endif %}
                 <option value={{el.id}}>{{el.camera_type}}</option>
@@ -123,7 +122,7 @@
           <labell for="lastName">Choose survey type</labell>
           <select name="survey_select" class="custom-select d-block w-100" id="survey_select">
            {% for el in surveys %}
-              {% if planner_values.survey_id == el.id %}
+              {% if select_survey.id == el.id %}
                 <option value={{el.id}} selected>{{el.name}}</option>
               {% endif %}
                 <option value={{el.id}}>{{el.name}}</option>
