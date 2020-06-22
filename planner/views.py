@@ -28,8 +28,8 @@ def index(request):
        drones = Drone.objects.all()
        surveys = SurveyType.objects.all() 
 
-       print("Camera id "+str(camera_id))
-       print(planner_values)
+    #    print("Camera id "+str(camera_id))
+    #    print(planner_values)
 
        select_survey = surveys.get(id = survey_type_id)
        select_drone = drones.get(id=drone_id)

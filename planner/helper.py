@@ -33,7 +33,7 @@ class Calculations(object):
             self.lat_dimension_of_sensor_mm = selected_camera.sensorw
             self.fwd_dimension_of_sensor_mm = selected_camera.sensorh   
             self.image_size = selected_camera.imageSize
-            print(selected_camera)
+            # print(selected_camera)
             # print("focal length : "+str(self.focal_length))
             # print("lateral dimension of sensor px : "+str(self.lat_dimension_of_sensor_px))  
             # print("forward dimension of sensor px : "+str(self.fwd_dimension_of_sensor_px))           
@@ -142,7 +142,7 @@ class Calculations(object):
         return round((self.get_total_num_of_photos()* self.lat_dimension_of_sensor_px* self.fwd_dimension_of_sensor_px)/(10**9),1)
      
     def get_number_of_flights(self):
-        return round(self.get_f_thirteen()/self.distance_travelled_per_flight,0)
+        return ceil(self.get_f_thirteen()/self.distance_travelled_per_flight)
 
     #Processing information sheet
     def estimated_file_size(self):
