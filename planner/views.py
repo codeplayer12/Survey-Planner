@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
-from .helper import Calculations
+from .helper import Calculations, BudgetCalculations
 from django.urls import reverse
-from .models import Camera, Drone, SurveyType
+from .models import Camera, Drone, SurveyType, BudgetItem
 import json
 from django.core import serializers
 import requests
@@ -19,6 +19,7 @@ def index(request):
        area_size  = area_calc(int(request.POST['area_size']),request.POST['units'])
        bttry_capacity = int(request.POST['battery_capacity'])
        flight_height = int(request.POST['flight_height'])
+
        selected_drone = Drone.objects.get(id = drone_id)
        distance_travelled_per_flight = (selected_drone.flightTime * 60 * selected_drone.cruiseSpeed)/(1+ (bttry_capacity/100) + flight_height *(0.01/12.5))
        cal = Calculations(camera_id,survey_type_id,bttry_capacity,flight_height,take_of_area_distance,area_size,distance_travelled_per_flight)
@@ -107,3 +108,23 @@ def get_survey_values(request):
         return JsonResponse({"data":data}, status=200)
     return JsonResponse({"success":False}, status=400)
        
+def budget_calc(request):
+    if request.method == "POST":
+        num_flights = request.POST['num_flights']
+        images_captured = request.POST['images_captured']
+        print(images_captured)
+        print(num_flights)
+        budget_items = BudgetItem.objects.all()
+        # budget_items(Insurance)
+        print(budget_items)            
+        cal = BudgetCalculations(num_flights,images_captured)  
+        total_cost = cal.get_total_cost()
+        print("Total cost "+str(total_cost))  
+        cost = cal.item_cost()    
+        return render(request, 'planner/budget.html',
+        {'budget_items': budget_items,'cost':cost})
+    elif request.method == "GET":
+        return render(request, 'planner/budget.html')
+
+def get_default_values():
+    pass

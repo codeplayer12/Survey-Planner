@@ -1,0 +1,295 @@
+<html>
+
+<head>
+  <title>Planner</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js">
+  <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js">
+</head>
+
+<body class="bg-light">
+  <div class="container">
+    <div class="py-5 text-center">
+      <h2>Budget Calculator {{cost}}</h2>
+      
+    </div>
+    <div class="row"> 
+      <div class="col-md-10 order-md-1">
+        <form action="{% url 'index'%}" class="card p-2" method="POST"> {% csrf_token %}
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col">Days</th>
+                <th scope="col">Units</th>
+                <th scope="col">Unit Cost</th>
+                <th scope="col">Total Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Human Resources</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Ground Survey</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>International Support</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Project Manager</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Drone Pilots</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Data/GIS Specialist</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>amount</td>
+              </tr>
+              <tr>
+                <th>Technology/Equipment</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Ground Survey</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Drone Rental</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Laptop Rental</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Software Rental</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>              
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>amount</td>
+              </tr>
+              <tr>
+                <th>Operations, Logistics & Travel</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Organize flight permissions</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Local travel</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Local accomodation and per diem</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Community engagement</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>              
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>amount</td>
+              </tr>
+              <tr>
+              <th>Other</th>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Insurance</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>                      
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>amount</td>
+              </tr>
+              <tr>
+                <th>Sub-total</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Amount</td>
+              </tr>
+              <tr>
+                <th>Other</th>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td>Project Management 10%</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>  
+              <tr>
+                <th scope="row"></th>
+                <td>Project Overhead 15%</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>                    
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total Amount</td>
+              </tr>
+            </tbody>
+          </table>
+          <hr class="mb-4">
+          <button class="btn btn-primary btn-lg btn-block" type="submit">Calculate mission estimates</button>
+        </form>
+      </div>
+    
+    
+    </div>
+  </div>
+  {% block javascript %}
+  <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script>
+    $(function () {
+      $(document).on('change', "#drone", function (e) {
+        let value = $(this).val();
+        var data = { value };
+        var settings = {
+          "url": "{% url 'drone' %}",
+          "method": "GET",
+          "timeout": 0,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "data": data,
+        };
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          drone = response.data;
+          $('#flightTime').val(drone.flight_time);
+          $('#cruiseSpeed').val(drone.cruise_speed);
+        });
+      });
+
+
+      $(document).on('change', "#survey_select", function (e) {
+        let value = $(this).val();
+        var data = { value };
+        var settings = {
+          "url": "{% url 'survey' %}",
+          "method": "GET",
+          "timeout": 0,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "data": data,
+        };
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          survey = response.data;
+          $('#forward').val(survey.forward);
+          $('#lateral').val(survey.lateral);
+        });
+      });
+
+    });
+  </script>
+  {% endblock javascript %}
+</body>

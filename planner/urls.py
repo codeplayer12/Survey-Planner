@@ -12,4 +12,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('drone',views.get_drone_values,name="drone"),
     path('survey',views.get_survey_values,name="survey"),
+    path('budget',views.budget_calc,name="budget"),
 ]
