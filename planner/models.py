@@ -62,10 +62,10 @@ class PlannerValues(models.Model):
     survey_type_id = models.IntegerField()
         
 class BudgetEstimate(models.Model):
-    total = models.FloatField()
+    cost = models.FloatField()
 
     def __str__(self):
-        return self.total
+        return self.cost
 
 class DepartmentCost(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
@@ -83,12 +83,6 @@ class BudgetItemCost(models.Model):
 
     def __str__(self):
         return self.budget_item.name
-
-class TotalCost(models.Model):
-    cost = models.FloatField()
-
-    def __str__(self):
-        return self.cost
 
 class Defaults(models.Model):
     drone = models.IntegerField()
