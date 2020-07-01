@@ -215,6 +215,7 @@
     $(function () {
       $(document).on('change', "#drone", function (e) {
         let value = $(this).val();
+        $('#selected_drone').val(value);
         var data = { value };
         var settings = {
           "url": "{% url 'drone' %}",
@@ -230,7 +231,8 @@
           drone = response.data;
           $('#flightTime').val(drone.flight_time);
           $('#cruiseSpeed').val(drone.cruise_speed);
-          $('#selected_drone').val(drone.id);
+          // $('#selected_drone').val(drone.id);
+          // console.log("Selected drone id " +)
         });
       });
 
