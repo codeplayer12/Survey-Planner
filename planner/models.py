@@ -44,7 +44,7 @@ class BudgetItem(models.Model):
     def __str__(self):
         return self.name
 
-class PlannerValues(models.Model):
+class PlannerValue(models.Model):
     number_of_flights = models.IntegerField()
     orthophoto_resolution = models.FloatField()
     dsm_resolution = models.FloatField()
@@ -84,7 +84,7 @@ class BudgetItemCost(models.Model):
     def __str__(self):
         return self.budget_item.name
 
-class Defaults(models.Model):
+class Default(models.Model):
     drone = models.IntegerField()
     camera = models.IntegerField()
     surveyType = models.IntegerField()
