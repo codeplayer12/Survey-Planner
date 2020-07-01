@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from .helper import Calculations, BudgetCalculations
 from django.urls import reverse
-from .models import Camera, Drone, SurveyType, BudgetItem
+from .models import Camera, Drone, SurveyType, BudgetItem, BudgetEstimate
 import json
 from django.core import serializers
 import requests
@@ -45,6 +45,8 @@ def index(request):
         select_survey = surveys.get(id=survey_type_id)
         select_drone = drones.get(id=drone_id)
         select_camera = cameras.get(id=camera_id)
+        budget_estimate = BudgetEstimate.objects.all()[0]
+        print(budget_estimate)
         return render(
             request,
             "planner/index.html",
@@ -56,6 +58,7 @@ def index(request):
                 "select_drone": select_drone,
                 "select_survey": select_survey,
                 "select_camera": select_camera,
+                "budget_estimate": budget_estimate
             },
         )
     # except Exception as e:
@@ -91,6 +94,8 @@ def index(request):
             distance_travelled_per_flight,
         )
         planner_values = json.loads(cal.get_planner_display_values())
+        budget_estimate = BudgetEstimate.objects.all()[0]
+        print("Budget cost "+ str(budget_estimate.cost))
         return render(
             request,
             "planner/index.html",
@@ -102,6 +107,7 @@ def index(request):
                 "select_drone": select_drone,
                 "select_survey": select_survey,
                 "select_camera": select_camera,
+                "budget_estimate": budget_estimate
             },
         )
     except Exception as e:
@@ -126,7 +132,7 @@ def get_drone_values(request):
             drone = Drone.objects.get(id=drone_id)
         except:
             return JsonResponse({"success": False}, status=400)
-        data = {"cruise_speed": drone.cruiseSpeed, "flight_time": drone.flightTime}
+        data = {"cruise_speed": drone.cruiseSpeed, "flight_time": drone.flightTime, "id":drone.id}
         return JsonResponse({"data": data}, status=200)
     return JsonResponse({"success": False}, status=400)
 
@@ -146,18 +152,25 @@ def get_survey_values(request):
 def budget_calc(request):
     if request.method == "POST":
         num_flights = request.POST["num_flights"]
-        images_captured = request.POST["images_captured"]
+        images_captured = request.POST["images_captured"] 
+        selected_drone_id = request.POST["selected_drone"]
+
+        selected_drone = Drone.objects.get(id=selected_drone_id)
+        print(selected_drone)
         print(images_captured)
         print(num_flights)
-        budget_items = BudgetItem.objects.all()
+        # budget_items = BudgetItem.objects.all()
         # budget_items(Insurance)
-        print(budget_items)
-        cal = BudgetCalculations(num_flights, images_captured)
-        total_cost = cal.get_total_cost()
-        print("Total cost " + str(total_cost))
-        cost = cal.item_cost()
+        # print(budget_items)
+        # cal = BudgetCalculations(num_flights, images_captured)
+        # total_cost = cal.get_total_cost()
+        # print("Total cost " + str(total_cost))
+        # cost = cal.item_cost()
+        # return render(
+            # request, "planner/budget.html", {"budget_items": budget_items, "cost": cost}
+        # )
         return render(
-            request, "planner/budget.html", {"budget_items": budget_items, "cost": cost}
+            request, "planner/budget.html"
         )
     elif request.method == "GET":
         return render(request, "planner/budget.html")

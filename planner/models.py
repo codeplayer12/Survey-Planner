@@ -65,7 +65,7 @@ class BudgetEstimate(models.Model):
     cost = models.FloatField()
 
     def __str__(self):
-        return self.cost
+        return str(self.cost)
 
 class DepartmentCost(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)

@@ -79,10 +79,11 @@
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-muted">Budget Estimates</span>
         </h4>
+        <input type="number" id="selected_drone" name="selected_drone" value="{{ select_drone.id }}" hidden>
         <ul class="list-group mb-3">
           <li class="list-group-item d-flex justify-content-between">
             <span>Budget (NAD)</span>
-            <strong>$20</strong>
+            <strong>{{ budget_estimate.cost }}</strong>
           </li>
         </ul>        
             <button type="submit" class="btn btn-secondary btn-lg btn-block">View Budget</button>
@@ -229,6 +230,7 @@
           drone = response.data;
           $('#flightTime').val(drone.flight_time);
           $('#cruiseSpeed').val(drone.cruise_speed);
+          $('#selected_drone').val(drone.id);
         });
       });
 
