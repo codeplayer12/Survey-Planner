@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\bless\\Anaconda3\\python.exe"
+    "python.pythonPath": "C:\\Users\\bless\\Anaconda3\\python.exe",
+    "python.formatting.provider": "black"
 }
