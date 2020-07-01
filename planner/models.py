@@ -5,12 +5,12 @@ class Camera(models.Model):
     camera_type = models.CharField(max_length=200)
     sensorw = models.FloatField()          
     sensorh = models.FloatField()
-    pixelw  = models.IntegerField()
+    pixelw = models.IntegerField()
     pixelh = models.IntegerField()
     mpixel = models.FloatField()
     lensFocal = models.FloatField() 
     imageSize = models.FloatField() 
-    comments = models.CharField(max_length=200,blank=True)
+    comments = models.CharField(max_length=200, blank=True)
     
     def __str__(self):
         return self.camera_type
@@ -27,7 +27,7 @@ class SurveyType(models.Model):
 class Drone(models.Model):
     name = models.CharField(max_length=30)
     cruiseSpeed = models.FloatField()
-    flightTime =models.FloatField()
+    flightTime = models.FloatField()
     pricing = models.IntegerField()
     comments = models.CharField(max_length=20,blank=True)
     def __str__(self):
@@ -40,15 +40,11 @@ class Department(models.Model):
 
 class BudgetItem(models.Model):
     name = models.CharField(max_length=50)
-    days = models.FloatField(max_length=11,null=True,blank=True)
-    unit = models.FloatField(null=True,blank=True)
-    unitCost = models.IntegerField(null=True,blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    total_cost = models.IntegerField()
     def __str__(self):
         return self.name
 
-class PlannerValues(models.Model):
+class PlannerValue(models.Model):
     number_of_flights = models.IntegerField()
     orthophoto_resolution = models.FloatField()
     dsm_resolution = models.FloatField()
@@ -66,5 +62,34 @@ class PlannerValues(models.Model):
     survey_type_id = models.IntegerField()
         
 class BudgetEstimate(models.Model):
-    total = models.FloatField()
+    cost = models.FloatField()
 
+    def __str__(self):
+        return str(self.cost)
+
+class DepartmentCost(models.Model):
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    total_Cost = models.FloatField()
+
+    def __str__(self):
+        return self.department.name
+
+class BudgetItemCost(models.Model):
+    budget_item = models.ForeignKey(BudgetItem, on_delete=models.CASCADE)
+    days = models.FloatField(blank = True, null = True)
+    unitCost = models.FloatField()
+    units = models.FloatField(blank =True, null =True)
+    totalCost = models.FloatField()
+
+    def __str__(self):
+        return self.budget_item.name
+
+class Default(models.Model):
+    drone = models.IntegerField()
+    camera = models.IntegerField()
+    surveyType = models.IntegerField()
+    batteryCapacity = models.IntegerField()
+    areaSize  = models.IntegerField()
+    selectedMeasure = models.CharField(max_length=255)
+    distance_travelled_per_flight = models.FloatField() 
+    take_of_area_distance  = models.FloatField()
