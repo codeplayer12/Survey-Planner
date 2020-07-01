@@ -76,9 +76,9 @@ class DepartmentCost(models.Model):
 
 class BudgetItemCost(models.Model):
     budget_item = models.ForeignKey(BudgetItem, on_delete=models.CASCADE)
-    days = models.FloatField()
+    days = models.FloatField(blank = True, null = True)
     unitCost = models.FloatField()
-    units = models.FloatField()
+    units = models.FloatField(blank =True, null =True)
     totalCost = models.FloatField()
 
     def __str__(self):
