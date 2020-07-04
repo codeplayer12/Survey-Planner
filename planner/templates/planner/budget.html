@@ -15,7 +15,7 @@
     </div>
     <div class="row"> 
       <div class="col-md-10 order-md-1">
-        <form action="{% url 'index'%}" class="card p-2" method="POST"> {% csrf_token %}
+        <form action="{% url 'budget_adjustment'%}" class="card p-2" method="POST"> {% csrf_token %}
           <table class="table table-striped">
             <thead>
               <tr>
@@ -39,10 +39,10 @@
               <tr>
                 <th scope="row"></th>
                 <td>Ground Survey</td>
-                <td><input type="number" class="form-control" min="0" id="ground_days" max="100" disabled></td>
-                <td><input type="number" class="form-control" min="0" id="ground_unit"></td>
-                <td><input type="number" class="form-control" min="0" id="ground_unit_cost"></td>
-                <td><input type="number" class="form-control" min="0" id="ground_total" disabled></td>
+                <td><input type="number" class="form-control" min="0" name="ground_days" id="ground_days" max="100" disabled></td>
+                <td><input type="number" class="form-control" min="0" name="ground_unit" id="ground_unit"></td>
+                <td><input type="number" class="form-control" min="0" name="ground_unit_cost" id="ground_unit_cost"></td>
+                <td><input type="number" class="form-control" min="0" name="ground_total" id="ground_total" disabled></td>
               </tr>
               <tr>
                 <th scope="row"></th>
@@ -91,15 +91,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-              </tr>
-              <tr>
-                <th scope="row"></th>
-                <td>Ground Survey</td>
-                <td><input type="number" class="form-control" min="0" id="ground_days" max="100" disabled></td>
-                <td><input type="number" class="form-control" min="0" id="ground_unit"></td>
-                <td><input type="number" class="form-control" min="0" id="ground_unit_cost"></td>
-                <td><input type="number" class="form-control" min="0" id="ground_total" disabled></td>
-              </tr>
+              </tr>              
               <tr>
                 <th scope="row"></th>
                 <td>Drone Rental</td>

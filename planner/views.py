@@ -175,6 +175,26 @@ def budget_calc(request):
     elif request.method == "GET":
         return render(request, "planner/budget.html")
 
+def budget_adjustment(request):
+    if request.method == 'POST':
+        # Ground unit values
+        ground_days = request.POST["ground_days"]
+        ground_unit = request.POST["ground_unit"]
+        ground_unit_cost = request.POST["ground_unit_cost"]
 
+        print('Ground days '+str(ground_days)+
+        ' Ground unit'+str(ground_unit)+
+        ' Ground unit cost '+str(ground_unit_cost))
+
+        # International Support
+        # international_days = request.POST["international_days"]
+        # international_unit = request.POST["international_unit"]
+        # ground_unit_cost = request.POST["international_unit_cost"]
+
+        # # Project Manager
+        # project_m_days = request.POST["project_m_days"]
+        # project_m_unit = request.POST["project_m_unit"]
+        # project_m_unit_cost = request.POST["project_m_unit_cost"]
+             
 def get_default_values():
     pass
