@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from .helper import Calculations, BudgetCalculations
 from django.urls import reverse
-from .models import Camera, Drone, SurveyType, BudgetItem, BudgetEstimate
+from .models import Camera, Drone, SurveyType, BudgetItem, BudgetEstimate,BudgetItemCost,DepartmentCost        
 import json
 from django.core import serializers
 import requests
@@ -173,7 +173,16 @@ def budget_calc(request):
             request, "planner/budget.html"
         )
     elif request.method == "GET":
-        return render(request, "planner/budget.html")
+        # get all the default values to display
+        budget_item_costs = BudgetItemCost.objects.all()
+        department_costs = DepartmentCost.objects.all()
+        budget_estimate = BudgetEstimate.objects.all()[0]
+        return render(request, "planner/budget.html"
+        ,{
+                "budget_item_costs": budget_item_costs,
+                "department_costs": department_costs,
+                "budget_estimate": budget_estimate                
+        },)
 
 def budget_adjustment(request):
     if request.method == 'POST':
@@ -187,14 +196,71 @@ def budget_adjustment(request):
         ' Ground unit cost '+str(ground_unit_cost))
 
         # International Support
-        # international_days = request.POST["international_days"]
-        # international_unit = request.POST["international_unit"]
-        # ground_unit_cost = request.POST["international_unit_cost"]
+        international_days = request.POST["international_days"]
+        international_unit = request.POST["international_unit"]
+        ground_unit_cost = request.POST["international_unit_cost"]
 
-        # # Project Manager
-        # project_m_days = request.POST["project_m_days"]
-        # project_m_unit = request.POST["project_m_unit"]
-        # project_m_unit_cost = request.POST["project_m_unit_cost"]
+        # Project Manager
+        project_m_days = request.POST["project_m_days"]
+        project_m_unit = request.POST["project_m_unit"]
+        project_m_unit_cost = request.POST["project_m_unit_cost"]
+
+        # Drone Pilots
+        drone_p_days = request.POST["drone_p_days"]
+        drone_p_unit = request.POST["drone_p_unit"]
+        drone_p_unit_cost = request.POST["drone_p_unit_cost"]
+
+        # Data/GIS Specialist
+        gis_days = request.POST["gis_days"]
+        gis_unit = request.POST["gis_unit"]
+        gis_unit_cost = request.POST["gis_unit_cost"]
+
+        # Drone Rental
+        drone_r_days = request.POST["drone_r_days"]
+        drone_r_unit = request.POST["drone_r_unit"]
+        drone_r_unit_cost = request.POST["drone_r_unit_cost"]
+
+        # Laptop Rental
+        laptop_r_days = request.POST["laptop_r_days"]
+        laptop_r_unit = request.POST["laptop_r_unit"]
+        drone_r_unit_cost = request.POST["laptop_r_unit_cost"]
+
+        # Software Rental
+        software_r_unit = request.POST["software_r_unit"]
+        software_r_unit_cost = request.POST["software_r_unit_cost"]
+
+        # Organize flight permissions
+        flight_days = request.POST["flight_days"]
+        flight_unit = request.POST["flight_unit"]
+        flight_unit_cost = request.POST["flight_unit_cost"]
+
+        # Local travel
+        travel_days = request.POST["travel_days"]
+        travel_unit = request.POST["travel_unit"]
+        travel_unit_cost = request.POST["travel_unit_cost"]
              
+        # Local accomodation and per diem
+        accodomation_days = request.POST["accodomation_days"]
+        accodomation_unit = request.POST["accodomation_unit"]
+        accodomation_unit_cost = request.POST["accodomation_unit_cost"]
+
+        # Community engagement
+        community_days = request.POST["community_days"]
+        community_unit = request.POST["community_unit"]
+        community_unit_cost = request.POST["community_unit_cost"]
+
+        # Insurance
+        insurance_days = request.POST["insurance_days"]
+        insurance_unit = request.POST["insurance_unit"]
+        insurance_unit_cost = request.POST["insurance_unit_cost"]
+
+        # Project Management 10%
+        project_m_unit = request.POST["project_m_unit"]
+        project_m_unit_cost = request.POST["project_m_unit_cost"]
+      
+        # Project Overhead 15%
+        project_o_unit = request.POST["project_o_unit"]
+        project_o_unit_cost = request.POST["project_o_unit_cost"]
+
 def get_default_values():
     pass
