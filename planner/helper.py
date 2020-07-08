@@ -259,4 +259,12 @@ class Calculations(object):
         # print("pixel ground coverage lateral : "+str(self.get_pixel_ground_coverage_cm_lateral()) +"\n") 
         # + ("pixel ground coverage forward : "+str(self.get_pixel_ground_coverage_cm_forward()))
 
-   
+#    def item_calc_totals(self,day ,unit,unit_cost):
+#        total= day*unit*unit_cost
+#        return total
+    def sum(*args):
+        total = 1
+        for i in args:
+            total *= i
+        return total
+
