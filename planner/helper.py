@@ -1,11 +1,11 @@
-from .models import Camera,SurveyType, Drone, BudgetItem,Department
+from .models import Camera,SurveyType, Drone, BudgetItem,Department,BudgetItemCost,DepartmentCost,BudgetEstimate
 from math import atan,degrees,radians,tan,sqrt,ceil
 import logging
 import json  
 
 class BudgetCalculations(object):
 
-    def __init__(self,num_flights,images_captured):
+    def __init__(self, num_flights, images_captured):
         self.num_flights = num_flights
         self.images_captured = images_captured
 
@@ -28,6 +28,10 @@ class BudgetCalculations(object):
         budget_estimate = 0.0
         for department in departments:
             budget_estimate += self.department_total_cost(department)
+        budget_estimate_updated = BudgetEstimate.objects.all()[0]   
+        budget_estimate_updated.cost =  budget_estimate
+        budget_estimate_updated.save()
+        print('The total cost '+str(budget_estimate))    
         return budget_estimate
 
     def item_cost(self):
@@ -37,17 +41,17 @@ class BudgetCalculations(object):
            cost.update({item.name:item.total_cost})
         return(cost)
 
-
-
-    def department_total_cost(self,department):
-       list_budget_items = BudgetItem.objects.filter(department_id= department.id)  
+    def department_total_cost(self, department):
+       list_budget_items=BudgetItem.objects.filter(department_id=department.id)  
        department_total_cost = 0.0
-       dep = {}
        for budget_item in list_budget_items:
-            department_total_cost += budget_item.total_cost
-
-            dep.update({budget_item.name: department_total_cost})
+            budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0]
+            department_total_cost += budget_item_cost.totalCost
        
+    # Save new department total cost
+       updated_department = DepartmentCost.objects.filter(department=department)[0]
+       updated_department.total_Cost = department_total_cost
+       updated_department.save()
        print("Department : "+department.name +" Total cost : "+str(department_total_cost))
     #    print(dep)
        return department_total_cost
@@ -266,5 +270,22 @@ class Calculations(object):
         total = 1
         for i in args:
             total *= i
-        return total
+        return ceil(total)
 
+    # def get_total_cost(*args):
+    #     departments = Department.objects.all()
+    #     budget_estimate = 0.0
+    #     for department in departments:
+    #         budget_estimate += department_total_cost(department)
+    #     print('The total cost '+str(budget_estimate))    
+    #     return budget_estimate    
+
+    # def department_total_cost(self,department):
+    #    list_budget_items=BudgetItem.objects.filter(department_id=department.id)  
+    #    department_total_cost = 0.0
+    #    for budget_item in list_budget_items:
+    #         budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0]
+    #         department_total_cost += budget_item_cost.totalCost
+               
+    #    print("Department : "+department.name +" Total cost : "+str(department_total_cost))
+    #    return department_total_cost
