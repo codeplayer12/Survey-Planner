@@ -139,7 +139,90 @@ class BudgetCalculations(object):
         pass
 
     def set_defaults(self):
-        pass
+        budget_items = BudgetItem.objects.all()
+        for budget_item in budget_items:
+            if budget_item.name == "International support": 
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.units= 1.0
+                budget_item_cost.unitCost= 700.0
+                budget_item_cost.totalCost= 140.0
+                budget_item_cost.days= 0.2
+                budget_item_cost.save()                    
+            if budget_item.name == "Drone Pilots":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0]
+                budget_item_cost.units= 2.0
+                budget_item_cost.unitCost= 200.0
+                budget_item_cost.totalCost= 480.0
+                budget_item_cost.days= 1.2
+                budget_item_cost.save()                
+            if budget_item.name == "Data Gis specialist": 
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.units= 1.0
+                budget_item_cost.unitCost= 200.0
+                budget_item_cost.totalCost= 200.0
+                budget_item_cost.days= 1.0
+                budget_item_cost.save()        
+            if budget_item.name =="Ground Survey": 
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.units= 0.0
+                budget_item_cost.unitCost= 400.0
+                budget_item_cost.totalCost= 0.0
+                budget_item_cost.days= 0.0
+                budget_item_cost.save()                      
+            if budget_item.name =="Project Manager":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.units= 1.0
+                budget_item_cost.unitCost= 350.0
+                budget_item_cost.totalCost= 140.0
+                budget_item_cost.days= 0.4
+                budget_item_cost.save()                
+            if budget_item.name =="Drone Rental":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.units= 1.0
+                budget_item_cost.unitCost= 500.0
+                budget_item_cost.totalCost= 600.0
+                budget_item_cost.days= 1.2
+                budget_item_cost.save()                   
+            if budget_item.name =="Laptop Rental":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.units= 1.0
+                budget_item_cost.unitCost= 100.0
+                budget_item_cost.totalCost= 220.0
+                budget_item_cost.days= 2.2
+                budget_item_cost.save()                  
+            if budget_item.name =="Organize flight permissions":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.units= 1.0
+                budget_item_cost.unitCost= 200.0
+                budget_item_cost.totalCost= 600.0
+                budget_item_cost.days= 3.0
+                budget_item_cost.save()                
+            if budget_item.name =="Local Travel":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.unitCost= 50.0
+                budget_item_cost.totalCost= 140.0
+                budget_item_cost.days= 2.8
+                budget_item_cost.save()               
+            if budget_item.name =="Local accomodation and per diem":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.unitCost= 40.0
+                budget_item_cost.totalCost= 0.0
+                budget_item_cost.days= 2.2
+                budget_item_cost.save()               
+            if budget_item.name =="Community engagement":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.units= 2.0
+                budget_item_cost.unitCost= 500.0
+                budget_item_cost.totalCost= 1000.0
+                budget_item_cost.days= 1.0
+                budget_item_cost.save() 
+            if budget_item.name =="Software Rental":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.unitCost= 350.0
+                budget_item_cost.totalCost= 350.0
+                budget_item_cost.units= 1.0
+                budget_item_cost.save()       
+    
 
     def round_up(self, n, decimals=0):
         multiplier = 10 ** decimals
