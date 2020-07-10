@@ -57,45 +57,75 @@ class BudgetCalculations(object):
        return department_total_cost
 
 
-    def get_days(self):
+    def set_days(self):
         budget_items = BudgetItem.objects.all()
-        total_number_of_images_captured = self.get_total_num_of_photos()
-        number_of_flights = self.get_number_of_flights()
+        total_number_of_images_captured = float(self.images_captured)
+        number_of_flights = float(self.num_flights)
+        print('Num of captures '+str(total_number_of_images_captured))
+        print('Num of flights '+str(number_of_flights))
+        ground_s = 0.0
         i_support = ceil((number_of_flights/4)*0.2)
         d_pilots = ceil((number_of_flights/4)*1.2)
+        d_units = 0.0
+        ground_units = 0.0
+        project_units = 0.0
         project_manager = d_pilots/3
         gis = ceil((((13/600)*total_number_of_images_captured)+((13/600)*total_number_of_images_captured)+(0.1*(13/600)*total_number_of_images_captured)/4)/24)
         drone_r =  d_pilots
         laptop_r = ground_s+d_pilots+gis
-        local_travel= (ground_s*units)+(d_pilots*units)+(project_manager*units)
-        local_acc= groung_s+d_pilots+gis
-        print(budget_item.name)
-        budget_days = {}
-        for budget_item in budget_items:
-            if budget_item.name =="International Support" :        
-                budget_days.update({budget_item.name:i_support})
-            if budget_item.name =="Drone pilot":
-                budget_days.update({budget_item.name:d_pilots})
-            if budget_item.name =="Data Gis specialist":               
-                budget_days.update({budget_item.name:gis})
-            if budget_item.name =="Ground Survey":            
-                budget_days.update({budget_item.name:0})
-            if budget_item.name =="Project Manager":
-                budget_days.update({budget_item.name:project_manager})
-            if budget_item.name =="Drone Rental":
-                budget_days.update({budget_item.name:drone_r})    
-            if budget_item.name =="Laptop Rental":
-                budget_days.update({budget_item.name:laptop_r})   
-            if budget_item.name =="Organize flight permissions":
-                budget_days.update({budget_item.name:3}) 
-            if budget_item.name =="Local Travel":
-                budget_days.update({budget_item.name:local_travel}) 
-            if budget_item.name =="Local accomodation and per diem":
-                budget_days.update({budget_item.name:local_acc}) 
-            if budget_item.name =="Community engagement":
-                budget_days.update({budget_item.name:1})
+       
+        local_acc= ground_s+d_pilots+gis        
 
-        return budget_days
+        for budget_item in budget_items:
+            if budget_item.name == "International Support": 
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.days=i_support
+                budget_item_cost.save()                    
+            if budget_item.name == "Drone pilot":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0]
+                d_units = budget_item_cost.units
+                budget_item_cost.days=d_pilots
+                budget_item_cost.save()                
+            if budget_item.name == "Data Gis specialist": 
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.days=gis
+                budget_item_cost.save()        
+            if budget_item.name =="Ground Survey": 
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                ground_units = budget_item_cost.units
+                budget_item_cost.days= 0.0
+                budget_item_cost.save()                        
+            if budget_item.name =="Project Manager":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                project_units = budget_item_cost.units
+                budget_item_cost.days= project_manager
+                budget_item_cost.save()                  
+            if budget_item.name =="Drone Rental":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.days= drone_r
+                budget_item_cost.save()                   
+            if budget_item.name =="Laptop Rental":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.days= laptop_r
+                budget_item_cost.save()                  
+            if budget_item.name =="Organize flight permissions":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.days= 3.0
+                budget_item_cost.save()                
+            if budget_item.name =="Local Travel":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                local_travel= (ground_s*ground_units)+(d_pilots*d_units)+(project_manager*project_units)
+                budget_item_cost.days= local_travel
+                budget_item_cost.save()                 
+            if budget_item.name =="Local accomodation and per diem":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.days= local_acc
+                budget_item_cost.save()                
+            if budget_item.name =="Community engagement":
+                budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
+                budget_item_cost.days= 1.0
+                budget_item_cost.save()  
+      
 
     def get_budget_item_cost(self,days,units,unit_cost):
         return days*units*unit_cost
@@ -104,6 +134,9 @@ class BudgetCalculations(object):
         return units*unit_cost
 
     def get_days(self,num_flights,num_images):
+        pass
+
+    def set_defaults(self):
         pass
 
     
