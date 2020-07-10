@@ -168,7 +168,8 @@ def budget_calc(request):
         # budget_items = BudgetItem.objects.all()
         # budget_items(Insurance)
         # print(budget_items)
-        # cal = BudgetCalculations(num_flights, images_captured)
+        cal = BudgetCalculations(num_flights, images_captured)
+        cal.set_days()
         # total_cost = cal.get_total_cost()
         # print("Total cost " + str(total_cost))
         # cost = cal.item_cost()
@@ -393,6 +394,9 @@ def budget_adjustment(request):
         project_overhead_budget_item = BudgetItem.objects.get(name='Project Overhead')
         # Calculate total before saving default value
         # sum_totals(project_o_unit,  project_o_unit_cost)
+
+        calc = BudgetCalculations(1,1)
+        calc.get_total_cost()
         budget_item_costs = BudgetItemCost.objects.all()
         department_costs = DepartmentCost.objects.all()
         budget_estimate = BudgetEstimate.objects.all()[0]
