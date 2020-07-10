@@ -139,6 +139,10 @@ class BudgetCalculations(object):
     def set_defaults(self):
         pass
 
+    def round_up(self,n, decimals=0):
+        multiplier = 10 ** decimals
+    return math.ceil(n * multiplier) / multiplier
+
     
 class Calculations(object):
 
