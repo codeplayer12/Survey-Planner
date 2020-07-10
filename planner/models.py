@@ -62,14 +62,14 @@ class PlannerValue(models.Model):
     survey_type_id = models.IntegerField()
         
 class BudgetEstimate(models.Model):
-    cost = models.FloatField()
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return str(self.cost)
 
 class DepartmentCost(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    total_Cost = models.FloatField()
+    total_Cost = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.department.name
@@ -77,9 +77,9 @@ class DepartmentCost(models.Model):
 class BudgetItemCost(models.Model):
     budget_item = models.ForeignKey(BudgetItem, on_delete=models.CASCADE)
     days = models.FloatField(blank = True, null = True)
-    unitCost = models.FloatField()
+    unitCost = models.DecimalField(max_digits=10, decimal_places=2)
     units = models.FloatField(blank =True, null =True)
-    totalCost = models.FloatField()
+    totalCost = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.budget_item.name
