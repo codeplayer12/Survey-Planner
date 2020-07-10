@@ -64,12 +64,14 @@ class BudgetCalculations(object):
         print('Num of captures '+str(total_number_of_images_captured))
         print('Num of flights '+str(number_of_flights))
         ground_s = 0.0
-        i_support = ceil((number_of_flights/4)*0.2)
-        d_pilots = ceil((number_of_flights/4)*1.2)
         d_units = 0.0
         ground_units = 0.0
         project_units = 0.0
-        project_manager = d_pilots/3
+        # i_support = ceil((number_of_flights/4)*0.2)
+        i_support = self.round_up(number_of_flights/4, decimals=0)*0.2
+        d_pilots = self.round_up(number_of_flights/4, decimals=0)*1.2
+        print('D pilots '+str(d_pilots))
+        project_manager = self.round_up(d_pilots/3, decimals=1)
         gis = ceil((((13/600)*total_number_of_images_captured)+((13/600)*total_number_of_images_captured)+(0.1*(13/600)*total_number_of_images_captured)/4)/24)
         drone_r =  d_pilots
         laptop_r = ground_s+d_pilots+gis
@@ -77,18 +79,18 @@ class BudgetCalculations(object):
         local_acc= ground_s+d_pilots+gis        
 
         for budget_item in budget_items:
-            if budget_item.name == "International Support": 
+            if budget_item.name == "International support": 
                 budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
                 budget_item_cost.days=i_support
                 budget_item_cost.save()                    
-            if budget_item.name == "Drone pilot":
+            if budget_item.name == "Drone Pilots":
                 budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0]
                 d_units = budget_item_cost.units
-                budget_item_cost.days=d_pilots
+                budget_item_cost.days= d_pilots
                 budget_item_cost.save()                
             if budget_item.name == "Data Gis specialist": 
                 budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
-                budget_item_cost.days=gis
+                budget_item_cost.days= gis
                 budget_item_cost.save()        
             if budget_item.name =="Ground Survey": 
                 budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
@@ -139,9 +141,9 @@ class BudgetCalculations(object):
     def set_defaults(self):
         pass
 
-    def round_up(self,n, decimals=0):
+    def round_up(self, n, decimals=0):
         multiplier = 10 ** decimals
-    return math.ceil(n * multiplier) / multiplier
+        return ceil(n * multiplier) / multiplier
 
     
 class Calculations(object):
