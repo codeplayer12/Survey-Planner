@@ -76,11 +76,11 @@ def index(request):
         camera_id = 15
         drone_id = 18
         survey_type_id = 1
-        flight_height = 30
-        bttry_capacity = 100
-        area_size = 1000
+        flight_height = 80
+        bttry_capacity = 30
+        area_size = 1
         distance_travelled_per_flight = 20988.14
-        take_of_area_distance = 5
+        take_of_area_distance = 0.5
         select_survey = surveys.get(id=survey_type_id)
         select_drone = drones.get(id=drone_id)
         select_camera = cameras.get(id=camera_id)
