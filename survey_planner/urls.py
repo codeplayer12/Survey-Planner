@@ -21,7 +21,7 @@ from planner import views
 
 
 urlpatterns = [
-    path('planner/', include('planner.urls')),
+    path('', include('planner.urls')),
     path('admin/', admin.site.urls),
     path('credit/',views.credits,name='credit')
 ]

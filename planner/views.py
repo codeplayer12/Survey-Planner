@@ -432,6 +432,10 @@ def budget_adjustment(request):
 
         # Ultimate total to save in db
         print("Sum total")
+        sum_total = Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per))
+        budget_estimate = BudgetEstimate.objects.all()[0]
+        budget_estimate.cost = sum_total
+        budget_estimate.save()
         print(Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per)))
         # total_cost =Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per))
         # project_overhead_cost = BudgetItemCost.objects.filter(budget_item=project_overhead_budget_item)[0]
@@ -442,7 +446,7 @@ def budget_adjustment(request):
         calc.get_total_cost()
         budget_item_costs = BudgetItemCost.objects.all()
         department_costs = DepartmentCost.objects.all()
-        budget_estimate = BudgetEstimate.objects.all()[0]
+        
 
     return render(request, "planner/budget.html"
     ,{
