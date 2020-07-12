@@ -9,16 +9,21 @@
 
 <body class="bg-light">
   <div class="container">
+    {% load static %}
+    <img src="{% static "We_Robotics.png" %}" class="rounded float-left" alt="Left">
+      <img src="{% static "namibia.png" %}" class="rounded float-right" alt="right">
     <div class="py-5 text-center">
       <h2>Mission Planner</h2>
     </div>
     <div class="row">
       
-      <div class="col-md-4 order-md-2 mb-4">
+      <div class="col-md-4 order-md-2 mb-4">   
+
         
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-muted">Mission Estimates</span>
         </h4>
+      
         <form action="{% url 'budget'%}" method="POST"> {% csrf_token %}
           <ul class="list-group mb-3">          
           <li class="list-group-item d-flex justify-content-between lh-condensed">
@@ -160,8 +165,8 @@
             </div>
             <div class="col-sm-3">
               <select name="units" class="custom-select d-block w-100 form-control">
-                <option value="meters" selected>m^2</option>
-                <option value="kilometres">km2</option>
+                <option value="meters" >m^2</option>
+                <option value="kilometres" selected>km2</option>
                 <option value="acres">ar</option>
                 <option value="hactares">ha</option>
               </select>
