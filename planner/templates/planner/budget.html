@@ -262,7 +262,11 @@
               <tr>
                 
                 <th colspan='5'>Sub-total</th>
-                <td><input type="number" class="form-control" min="0" name="sub_total" disabled></td>
+                {% for budget_item_cost in budget_item_costs %}
+                {% if  budget_item_cost.budget_item.name == 'Subtotal' %}   
+                <td><input type="number" class="form-control" min="0" name="sub_total" value={{budget_item_cost.totalCost}} readonly></td>
+                {% endif %}
+                {% endfor %}
               </tr>
               <tr>
                 <th colspan='6'>Other</th>
