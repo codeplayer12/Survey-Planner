@@ -1,0 +1,263 @@
+<html>
+
+<head>
+  <title>Planner | Home</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js">
+  <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js">
+</head>
+
+<body class="bg-light">
+  <div class="container">
+    <div class="py-5 text-center">
+      <h2>Mission Planner</h2>
+    </div>
+    <div class="row">
+      
+      <div class="col-md-4 order-md-2 mb-4">
+        
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Mission Estimates</span>
+        </h4>
+        <form action="{% url 'budget'%}" method="POST"> {% csrf_token %}
+          <ul class="list-group mb-3">          
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Number of flights</h6>
+            </div>
+            <span class="text-muted" id="num_flights">{{ planner_values.num_of_flights }}</span>
+            <input type="number" id="num_flights" name="num_flights" value="{{ planner_values.num_of_flights }}" hidden> 
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Duration of the mission </h6>
+              <small class="text-muted">in Day(s) with 4 flights per day</small>
+            </div>
+            <span class="text-muted">{{ planner_values.duration_mission }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Orthophoto resolution </h6>
+              <small class="text-muted">(cm/pixel)</small>
+            </div>
+            <span class="text-muted">{{ planner_values.ortho_reso }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">DSM resolution</h6>
+              <small class="text-muted">(cm/pixel)</small>
+            </div>
+            <span class="text-muted">{{ planner_values.dsm_reso }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Total number of images captured</h6>
+            </div>
+            <span class="text-muted" >{{ planner_values.num_images_captured }}</span>
+            <input type="number" id="images_captured" name="images_captured" value="{{ planner_values.num_images_captured }}" hidden> 
+          </li>
+        </ul>
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Data Estimates</span>
+        </h4>
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Total size of digital files </h6>
+              <small class="text-muted">(GB)</small>
+            </div>
+            <span class="text-muted">{{ planner_values.total_digital_files }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Number of gigapixel</h6>
+              <small class="text-muted">(Gigapixel)</small>
+            </div>
+            <span class="text-muted">{{ planner_values.num_gigapixel }}</span>
+          </li>
+        </ul>
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Budget Estimates</span>
+        </h4>
+        <input type="number" id="selected_drone" name="selected_drone" value="{{ select_drone.id }}" hidden>
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Budget (NAD)</span>
+            <strong>{{ budget_estimate.cost }}</strong>
+          </li>
+        </ul>        
+            <button type="submit" class="btn btn-secondary btn-lg btn-block">View Budget</button>
+       </form>
+       
+      
+      </div>
+      <div class="col-md-8 order-md-1">
+        <form action="{% url 'index'%}" class="card p-2" method="POST"> {% csrf_token %}
+          <h3 class="mb-3 text-muted">Drone Type</h3>
+          <div class="form-group row">
+            <label for="lastName" class="col-sm-6 col-form-label">Drone model</label>
+            <div class="col-sm-6">
+              <select name="drone" class="custom-select d-block w-100 form-control" onselect="get_drone_details()"
+                id="drone">
+                {% for el in drones %}
+                {% if select_drone.id == el.id %}
+                <option value={{el.id}} selected>{{el.name}}</option>
+                {% endif %}
+                <option value={{el.id}}>{{el.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="lastName" class="col-sm-6 col-form-label">Camera model</label>
+            <div class="col-sm-6">
+              <select name="camera" class="custom-select d-block w-100 form-control">
+                {% for el in cameras %}
+                {% if select_camera.id == el.id %}
+                <option value={{el.id}} selected>{{el.camera_type}}</option>
+                {% endif %}
+                <option value={{el.id}}>{{el.camera_type}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <hr class="mb-4">
+          <h3 class="mb-3 text-muted">Flight Parameters</h3>
+          <div class="form-group row">
+            <label for="flight_height" class="col-sm-6 col-form-label">Flight height above ground(meters)</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" name="flight_height" value="{{planner_values.flight_height}}"
+                min="0" id="flight_height" required>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="lastName" class="col-sm-6 col-form-label">Drone autonomy (minutes)</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" min="0" disabled value="{{ select_drone.flightTime}}"
+                id="flightTime">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="lastName" class="col-sm-6 col-form-label">Drone flight speed (meters per second)</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" min="0" disabled value="{{ select_drone.cruiseSpeed}}"
+                id="cruiseSpeed">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="lastName" class="col-sm-6 col-form-label">Battery capacity safety margin (%)</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" min="0" name="battery_capacity" max="100"
+                value="{{planner_values.battery_capacity}}" id="battery_capacity">
+            </div>
+          </div>
+          <hr class="mb-4">
+          <h3 class="mb-3 text-muted">Survey Parameters</h3>
+          <div class="form-group row">
+            <label for="lastName" class="col-sm-6 col-form-label">Area size and units</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" name="area_size" min="0" value="{{planner_values.area_size}}">
+            </div>
+            <div class="col-sm-3">
+              <select name="units" class="custom-select d-block w-100 form-control">
+                <option value="meters" selected>m^2</option>
+                <option value="kilometres">km2</option>
+                <option value="acres">ar</option>
+                <option value="hactares">ha</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="lastName" class="col-sm-6 col-form-label">Survey type</label>
+            <div class="col-sm-6">
+              <select name="survey_select" class="custom-select d-block w-100 form-control" id="survey_select">
+                {% for el in surveys %}
+                {% if select_survey.id == el.id %}
+                <option value={{el.id}} selected>{{el.name}}</option>
+                {% endif %}
+                <option value={{el.id}}>{{el.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="lastName" class="col-sm-6 col-form-label">Forward image overlap</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" name"forward" min="0" value="{{select_survey.forward}}"
+                id="forward" disabled>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="lastName" class="col-sm-6 col-form-label">Lateral image overlap</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" name="lateral" min="0" value="{{select_survey.lateral}}"
+                id="lateral" disabled>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="lastName" class="col-sm-6 col-form-label">Enter distance from take-off to survey area</label>
+            <div class="col-sm-6">
+              <input type="number" class="form-control" name="take_of_area" value="{{planner_values.take_of_area}}"
+                id="take_of_area" min="0">
+            </div>
+          </div>
+          <hr class="mb-4">
+          <button class="btn btn-primary btn-lg btn-block" type="submit">Calculate mission estimates</button>
+        </form>
+      </div>
+    
+    
+    </div>
+  </div>
+  {% block javascript %}
+  <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script>
+    $(function () {
+      $(document).on('change', "#drone", function (e) {
+        let value = $(this).val();
+        $('#selected_drone').val(value);
+        var data = { value };
+        var settings = {
+          "url": "{% url 'drone' %}",
+          "method": "GET",
+          "timeout": 0,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "data": data,
+        };
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          drone = response.data;
+          $('#flightTime').val(drone.flight_time);
+          $('#cruiseSpeed').val(drone.cruise_speed);
+          // $('#selected_drone').val(drone.id);
+          // console.log("Selected drone id " +)
+        });
+      });
+
+
+      $(document).on('change', "#survey_select", function (e) {
+        let value = $(this).val();
+        var data = { value };
+        var settings = {
+          "url": "{% url 'survey' %}",
+          "method": "GET",
+          "timeout": 0,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "data": data,
+        };
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          survey = response.data;
+          $('#forward').val(survey.forward);
+          $('#lateral').val(survey.lateral);
+        });
+      });
+
+    });
+  </script>
+  {% endblock javascript %}
+</body>
