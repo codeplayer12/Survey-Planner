@@ -352,7 +352,7 @@ def budget_adjustment(request):
         accommodation_budget= BudgetItemCost.objects.filter(budget_item=accommodation_budget_item)[0]
         accommodation_budget.unitCost = accodomation_unit_cost
         accommodation_budget.units = accodomation_unit 
-        accommodation_budget.totalCost = Calculations.sum(float(accodomation_days),float(accodomation_unit), float(accodomation_unit_cost))
+        accommodation_budget.totalCost = Calculations.sum(float(accodomation_days), float(accodomation_unit_cost))
         accommodation_budget.save() # Error no default value on one of the items
 
         # # Community engagement
@@ -376,24 +376,39 @@ def budget_adjustment(request):
         insurance_budget = BudgetItemCost.objects.filter(budget_item=insurance_budget_item)[0]
         insurance_budget.unitCost = insurance_unit_cost
         insurance_budget.units = insurance_unit
-        insurance_budget.totalCost = Calculations.sum(float(insurance_days),float(insurance_unit), float(insurance_unit_cost))
+        insurance_budget.totalCost = Calculations.sum(float(insurance_unit), float(insurance_unit_cost))
         insurance_budget.save()
 
+        # Subtotal
+        sub_total = Calculations.total_sum(ground_survey_cost_item.totalCost,international_cost_item.totalCost,project_manager_cost_item.totalCost,drone_pilots_cost_item.totalCost,data_cost_item.totalCost,drone_rental.totalCost,laptop_budget.totalCost,software_budget.totalCost,organize_budget.totalCost,local_travel_budget.totalCost,accommodation_budget.totalCost,community_budget.totalCost,insurance_budget.totalCost)
+        print('subtotal ')
+        print(sub_total)
+
         # # Project Management 10%
-        project_m_unit = request.POST["project_m_unit"]
+        # project_m_unit = request.POST["project_m_unit"]
         project_m_unit_cost = request.POST["project_m_unit_cost"]
 
         project_management_budget_item = BudgetItem.objects.get(name='Project Management')
+        print("10% of subtotal Project Management")
+        projectmanagement_per = Calculations.sum(float(project_m_unit_cost),float(sub_total))
+        print(Calculations.sum(float(project_m_unit_cost),float(sub_total)))
       
         # # Project Overhead 15%
-        project_o_unit = request.POST["project_o_unit"]
+        # project_o_unit = request.POST["project_o_unit"]
         project_o_unit_cost = request.POST["project_o_unit_cost"]
 
-        Calculations.sum(float(insurance_unit),float(insurance_unit_cost))
+        # Calculations.sum(float(insurance_unit),float(insurance_unit_cost))
 
         project_overhead_budget_item = BudgetItem.objects.get(name='Project Overhead')
+        print("5% of subtotal Project Overhead")
+        project_overhead_per=Calculations.sum(float(project_o_unit_cost),float(sub_total))
+        print(Calculations.sum(float(project_o_unit_cost),float(sub_total)))
         # Calculate total before saving default value
         # sum_totals(project_o_unit,  project_o_unit_cost)
+
+        # Ultimate total to save in db
+        print("Sum total")
+        print(Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per)))
 
         calc = BudgetCalculations(1,1)
         calc.get_total_cost()

@@ -304,6 +304,11 @@ class Calculations(object):
         for i in args:
             total *= i
         return ceil(total)
+    def total_sum(*args):
+        total = 1
+        for i in args:
+            total += i
+        return total
 
     # def get_total_cost(*args):
     #     departments = Department.objects.all()
