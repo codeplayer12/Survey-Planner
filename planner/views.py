@@ -412,4 +412,5 @@ def budget_adjustment(request):
 def get_default_values():
     pass
 
-
+def credits(request):
+    return render(request, 'planner/credits.html')
