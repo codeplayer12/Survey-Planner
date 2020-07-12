@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <title>Planner</title>
+  <title>Planner | Budget</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js">
   <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js">
@@ -233,7 +233,7 @@
                 {% endfor %}
               </tr>
               <tr>
-              <th>Other</th>
+              <th colspan='6'>Other</th>
               </tr>
               <tr>
                 <th scope="row"></th>
@@ -260,23 +260,24 @@
                 {% endfor %}
               </tr>
               <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <th scope="row">Sub-total</th>
-                <td><input type="number" class="form-control" min="0" name="sub_total" disabled></td>
+                
+                <th colspan='5'>Sub-total</th>
+                {% for budget_item_cost in budget_item_costs %}
+                {% if  budget_item_cost.budget_item.name == 'Subtotal' %}   
+                <td><input type="number" class="form-control" min="0" name="sub_total" value={{budget_item_cost.totalCost}} readonly></td>
+                {% endif %}
+                {% endfor %}
               </tr>
               <tr>
-                <th>Other</th>
-              </tr>
+                <th colspan='6'>Other</th>
+              </tr> 
               <tr>
                 <th scope="row"></th>
-                <td>Project Management 10%</td>  
+                <td colspan='3'>Project Management 10%</td>  
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Project Management' %}              
-                <td><input type="number" class="form-control" min="0" name="project_m_unit" readonly value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="project_m_unit_cost" readonly value ={{budget_item_cost.unitCost}}></td>
+                {% comment %} <td><input type="number" class="form-control" min="0" name="project_m_unit" readonly value ={{budget_item_cost.units}}></td> {% endcomment %}
+                <td><input type="number" class="form-control" min="0" name="project_m_unit_cost" readonly value ={{budget_item_cost.unitCost}} hidden></td>
                 <td><input type="number" class="form-control" min="0" name="project_m_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 <td></td>
                 {% endif %}
@@ -286,9 +287,9 @@
                 <th scope="row"></th>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Project Overhead' %} 
-                <td><input type="hidden" value={{budget_item_cost.budget_item.name}}/>{{budget_item_cost.budget_item.name}} 15%</td>
-                <td><input type="number" class="form-control" min="0" name="project_o_unit" readonly value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="project_o_unit_cost" readonly value ={{budget_item_cost.unitCost}}></td>
+                <td colspan='3'><input type="hidden" value={{budget_item_cost.budget_item.name}}/>{{budget_item_cost.budget_item.name}} 15%</td>
+                {% comment %} <td><input type="number" class="form-control" min="0" name="project_o_unit" readonly value ={{budget_item_cost.units}}></td> {% endcomment %}
+                <td><input type="number" class="form-control" min="0" name="project_o_unit_cost" readonly value ={{budget_item_cost.unitCost}} hidden></td>
                 <td><input type="number" class="form-control" min="0" name="project_o_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 <td></td>
                 {% endif %}
