@@ -9,20 +9,6 @@ class BudgetCalculations(object):
         self.num_flights = num_flights
         self.images_captured = images_captured
 
-# Load all objects and update days if Post form budget calculator, unit cost, days, units
-# these can be dictionaries, item name : value pairs, differentiated by dictionary type
-# append days for items that have days which can be changed
-# calculate budget item cost using values entered by user
-# calculate department cost
-# calculate budget estimate
-#
-
-# if post is get
-# Load all objects
-# First process calculate days
-# calculate budget item cost using default values 
-# calculate department cost
-# calculate budget estimate
     def get_total_cost(self):
         departments = Department.objects.all()
         budget_estimate = 0.0
@@ -46,7 +32,7 @@ class BudgetCalculations(object):
        department_total_cost = 0.0
        for budget_item in list_budget_items:
             budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0]
-            department_total_cost += budget_item_cost.totalCost
+            department_total_cost += float(budget_item_cost.totalCost)
        
     # Save new department total cost
        updated_department = DepartmentCost.objects.filter(department=department)[0]
