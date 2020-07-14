@@ -239,7 +239,7 @@
                 <th scope="row"></th>
                 <td>Insurance</td>
                 {% for budget_item_cost in budget_item_costs %}
-                {% if  budget_item_cost.budget_item.name == 'Community engagement' %}
+                {% if  budget_item_cost.budget_item.name == 'Insurance' %}
                 <td><input type="number" class="form-control" min="0" name="insurance_days" max="100" readonly value ={{budget_item_cost.days}}></td>
                 <td><input type="number" class="form-control" min="0" name="insurance_unit" readonly value ={{budget_item_cost.units}}></td>
                 <td><input type="number" class="form-control" min="0" name="insurance_unit_cost" value ={{budget_item_cost.unitCost}}></td>
@@ -287,7 +287,7 @@
                 <th scope="row"></th>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Project Overhead' %} 
-                <td colspan='3'><input type="hidden" value={{budget_item_cost.budget_item.name}}/>{{budget_item_cost.budget_item.name}} 15%</td>
+                <td colspan='3'><input type="hidden" value={{budget_item_cost.budget_item.name}}/>{{budget_item_cost.budget_item.name}} 5%</td>
                 {% comment %} <td><input type="number" class="form-control" min="0" name="project_o_unit" readonly value ={{budget_item_cost.units}}></td> {% endcomment %}
                 <td><input type="number" class="form-control" min="0" name="project_o_unit_cost" readonly value ={{budget_item_cost.unitCost}} hidden></td>
                 <td><input type="number" class="form-control" min="0" name="project_o_total" readonly value ={{budget_item_cost.totalCost}}></td>
@@ -307,6 +307,7 @@
           </table>
           <hr class="mb-4">
           <button class="btn btn-primary btn-lg btn-block" type="submit">Calculate mission estimates</button>
+          <a href="{% url 'index'%}" class="btn btn-secondary btn-lg btn-block">Back</a>
         </form>
       </div>
     

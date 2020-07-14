@@ -15,7 +15,7 @@ def index(request):
         drone_id = request.POST["drone"]
         camera_id = request.POST["camera"]
         survey_type_id = request.POST["survey_select"]
-        take_of_area_distance = int(request.POST["take_of_area"])
+        take_of_area_distance = float(request.POST["take_of_area"])
         area_size = area_calc(int(request.POST["area_size"]), request.POST["units"])
         bttry_capacity = int(request.POST["battery_capacity"])
         flight_height = int(request.POST["flight_height"])
@@ -33,14 +33,19 @@ def index(request):
             area_size,
             distance_travelled_per_flight,
         )
+
+        
         planner_values = json.loads(cal.get_planner_display_values())
+        # print(planner_values['num_of_flights'])
+
+        # Calculate days
+        cal = BudgetCalculations(planner_values['num_of_flights'], planner_values['num_images_captured'])
+        cal.set_days()
+        cal.get_total_cost()
 
         cameras = Camera.objects.all()
         drones = Drone.objects.all()
         surveys = SurveyType.objects.all()
-
-        #    print("Camera id "+str(camera_id))
-        #    print(planner_values)
 
         select_survey = surveys.get(id=survey_type_id)
         select_drone = drones.get(id=drone_id)
@@ -84,6 +89,7 @@ def index(request):
         select_survey = surveys.get(id=survey_type_id)
         select_drone = drones.get(id=drone_id)
         select_camera = cameras.get(id=camera_id)
+
         cal = Calculations(
             camera_id,
             survey_type_id,
@@ -94,6 +100,12 @@ def index(request):
             distance_travelled_per_flight,
         )
         planner_values = json.loads(cal.get_planner_display_values())
+
+        # Set budget default values
+        cal = BudgetCalculations(1, 1)
+        cal.set_defaults()
+        # cal.get_total_cost()
+
         budget_estimate = BudgetEstimate.objects.all()[0]
         print("Budget cost "+ str(budget_estimate.cost))
         return render(
@@ -433,28 +445,44 @@ def budget_adjustment(request):
         # Ultimate total to save in db
         print("Sum total")
         sum_total = Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per))
-        budget_estimate = BudgetEstimate.objects.all()[0]
-        budget_estimate.cost = sum_total
-        budget_estimate.save()
+        # estimate = Department.objects.get('Other')
+
+        # budget_estimate.cost = sum_total
+        # budget_estimate.save()
         print(Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per)))
+        estimate = BudgetEstimate.objects.all()[0]
+        estimate.cost = sum_total
+        estimate.save()
         # total_cost =Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per))
         # project_overhead_cost = BudgetItemCost.objects.filter(budget_item=project_overhead_budget_item)[0]
         # project_overhead_cost.totalCost = project_overhead_per
         # project_overhead_cost.save()
 
         calc = BudgetCalculations(1,1)
+        print(calc)
         calc.get_total_cost()
         budget_item_costs = BudgetItemCost.objects.all()
         department_costs = DepartmentCost.objects.all()
+        budget_estimate = BudgetEstimate.objects.all()[0]
+        
         
 
-    return render(request, "planner/budget.html"
-    ,{
+        return render(request, "planner/budget.html"
+        ,{
             "budget_item_costs": budget_item_costs,
             "department_costs": department_costs,
             "budget_estimate": budget_estimate                
-    },)
-
+        },)
+    else:
+        budget_item_costs = BudgetItemCost.objects.all()
+        department_costs = DepartmentCost.objects.all()
+        budget_estimate = BudgetEstimate.objects.all()[0]
+        return render(request, "planner/budget.html"
+        ,{
+            "budget_item_costs": budget_item_costs,
+            "department_costs": department_costs,
+            "budget_estimate": budget_estimate                
+        },)
 
 def get_default_values():
     pass
