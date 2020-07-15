@@ -62,10 +62,11 @@ class PlannerValue(models.Model):
     survey_type_id = models.IntegerField()
         
 class BudgetEstimate(models.Model):
+    name = models.CharField(max_length=40)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return str(self.cost)
+        return str(self.name)
 
 class DepartmentCost(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
