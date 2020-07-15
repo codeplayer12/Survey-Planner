@@ -115,8 +115,135 @@ class BudgetCalculations(object):
                 budget_item_cost.save()  
       
 
-    def get_budget_item_cost(self,days,units,unit_cost):
-        return days*units*unit_cost
+    def calculate_budget_item_cost(self):
+
+        budget_items = BudgetItem.objects.all()
+        ground_survey_budget_item = BudgetItem.objects.get(name='Ground Survey')
+        ground_survey_cost_item = BudgetItemCost.objects.filter(budget_item=ground_survey_budget_item)[0]
+        ground_survey_cost_item.totalCost = Calculations.sum(float(ground_survey_cost_item.days),
+        float(ground_survey_cost_item.units), float(ground_survey_cost_item.unitCost))
+        ground_survey_cost_item.save()
+      
+        # International Support
+        international_budget_item = BudgetItem.objects.get(name='International support')
+        international_cost_item = BudgetItemCost.objects.filter(budget_item=international_budget_item)[0]
+        international_cost_item.totalCost = Calculations.sum(float(international_cost_item.days),
+        float(international_cost_item.units), float(international_cost_item.unitCost))
+        international_cost_item.save()
+    
+        # # Project Manager
+        project_manager_budget_item = BudgetItem.objects.get(name='Project Manager')
+        project_manager_cost_item = BudgetItemCost.objects.filter(budget_item=project_manager_budget_item)[0]
+        project_manager_cost_item.totalCost = Calculations.sum(float(project_manager_cost_item.days),
+        float(project_manager_cost_item.units), float(project_manager_cost_item.unitCost))
+        project_manager_cost_item.save() # error being shown
+        # print(project_m_cost_item)
+
+        # # Drone Pilots
+        drone_pilots_budget_item = BudgetItem.objects.get(name='Drone Pilots')
+        drone_pilots_cost_item = BudgetItemCost.objects.filter(budget_item=drone_pilots_budget_item)[0]
+        drone_pilots_cost_item.totalCost = Calculations.sum(float(drone_pilots_cost_item.days),
+        float(drone_pilots_cost_item.units), float(drone_pilots_cost_item.unitCost))
+        drone_pilots_cost_item.save()
+
+        # # Data/GIS Specialist
+        data_budget_item = BudgetItem.objects.get(name='Data Gis specialist')
+        data_cost_item = BudgetItemCost.objects.filter(budget_item=data_budget_item)[0]
+        data_cost_item.totalCost = Calculations.sum(float(data_cost_item.days),
+        float(data_cost_item.units), float(data_cost_item.unitCost))
+        data_cost_item.save()
+
+        # # Drone Rental
+        drone_rental_budget_item = BudgetItem.objects.get(name='Drone Rental')
+        drone_rental = BudgetItemCost.objects.filter(budget_item=drone_rental_budget_item)[0]
+        drone_rental.totalCost = Calculations.sum(float(drone_rental.days),
+        float(drone_rental.units), float(drone_rental.unitCost))
+        drone_rental.save()
+
+        # # Laptop Rental
+        laptop_budget_item = BudgetItem.objects.get(name='Laptop Rental')
+        laptop_budget = BudgetItemCost.objects.filter(budget_item=laptop_budget_item)[0]
+        laptop_budget.totalCost = Calculations.sum(float(laptop_budget.days),
+        float(laptop_budget.units), float(laptop_budget.unitCost))
+        laptop_budget.save()
+
+        # # Software Rental
+        software_budget_item = BudgetItem.objects.get(name='Software Rental')
+        software_budget = BudgetItemCost.objects.filter(budget_item=software_budget_item)[0]
+        software_budget.totalCost = Calculations.sum(float(software_budget.units),float(software_budget.unitCost))
+        software_budget.save()
+
+        # # Organize flight permissions
+        organize_budget_item = BudgetItem.objects.get(name='Organize flight permissions')
+        organize_budget = BudgetItemCost.objects.filter(budget_item=organize_budget_item)[0]
+        organize_budget.totalCost = Calculations.sum(float(organize_budget.days),float(organize_budget.units),
+        float(organize_budget.unitCost))
+        organize_budget.save()
+
+        # # Local travel
+        local_travel_budget_item = BudgetItem.objects.get(name='Local Travel')
+        local_travel_budget = BudgetItemCost.objects.filter(budget_item=local_travel_budget_item)[0]
+        local_travel_budget.totalCost = Calculations.sum(float(local_travel_budget.days),
+        float(local_travel_budget.unitCost))
+        local_travel_budget.save()
+             
+        # # Local accomodation and per diem
+        accommodation_budget_item = BudgetItem.objects.get(name='Local accomodation and per diem')
+        accommodation_budget= BudgetItemCost.objects.filter(budget_item=accommodation_budget_item)[0]
+        accommodation_budget.totalCost = Calculations.sum(float(accommodation_budget.days), 
+        float(accommodation_budget.unitCost))
+        accommodation_budget.save() # Error no default value on one of the items
+
+        # # Community engagement
+        community_budget_item = BudgetItem.objects.get(name='Community engagement')
+        community_budget = BudgetItemCost.objects.filter(budget_item=community_budget_item)[0]
+        community_budget.totalCost = Calculations.sum(float(community_budget.days),
+        float(community_budget.units), float(community_budget.unitCost))
+        community_budget.save()
+
+        # # Insurance
+        insurance_budget_item = BudgetItem.objects.get(name='Insurance')
+        insurance_budget = BudgetItemCost.objects.filter(budget_item=insurance_budget_item)[0]
+        insurance_budget.totalCost = Calculations.sum(float(insurance_budget.units), float(insurance_budget.unitCost))
+        insurance_budget.save()
+
+        # Subtotal
+        sub_total = Calculations.total_sum(
+            ground_survey_cost_item.totalCost,
+            international_cost_item.totalCost,
+            project_manager_cost_item.totalCost,
+            drone_pilots_cost_item.totalCost,
+            data_cost_item.totalCost,
+            drone_rental.totalCost,
+            laptop_budget.totalCost,
+            software_budget.totalCost,
+            organize_budget.totalCost,
+            local_travel_budget.totalCost,
+            accommodation_budget.totalCost,
+            community_budget.totalCost,
+            insurance_budget.totalCost)
+
+        sub_total_cost = BudgetEstimate.objects.get(name='SubTotal')
+        sub_total_cost.cost = sub_total
+        sub_total_cost.save()
+        print('subtotal ')
+        print(sub_total)
+
+        project_management_budget_item = BudgetItem.objects.get(name='Project Management')
+        project_management_cost = BudgetItemCost.objects.filter(budget_item=project_management_budget_item)[0]
+        projectmanagement_per = Calculations.sum(float(project_management_cost.unitCost),float(sub_total))
+        project_management_cost.totalCost = projectmanagement_per
+        project_management_cost.save()
+             
+        project_overhead_budget_item = BudgetItem.objects.get(name='Project Overhead')
+        project_overhead_cost = BudgetItemCost.objects.filter(budget_item=project_overhead_budget_item)[0]
+        project_overhead_per=Calculations.sum(float(project_overhead_cost.unitCost),float(sub_total))
+        project_overhead_cost.totalCost = project_overhead_per
+        project_overhead_cost.save()
+               
+        # print("Sum total")
+        # sum_total = Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per))
+        # estimate = Department.objects.get('Other')
 
     def get_budget_item_cost(self,units,unit_cost):
         return units*unit_cost
