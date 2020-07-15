@@ -41,6 +41,7 @@ def index(request):
         # Calculate days
         cal = BudgetCalculations(planner_values['num_of_flights'], planner_values['num_images_captured'])
         cal.set_days()
+        cal.calculate_budget_item_cost()
         cal.get_total_cost()
 
         cameras = Camera.objects.all()
@@ -50,7 +51,7 @@ def index(request):
         select_survey = surveys.get(id=survey_type_id)
         select_drone = drones.get(id=drone_id)
         select_camera = cameras.get(id=camera_id)
-        budget_estimate = BudgetEstimate.objects.all()[0]
+        budget_estimate = BudgetEstimate.objects.get(name='Total')
         print(budget_estimate)
         return render(
             request,
@@ -105,8 +106,8 @@ def index(request):
         cal = BudgetCalculations(1, 1)
         cal.set_defaults()
         # cal.get_total_cost()
-
-        budget_estimate = BudgetEstimate.objects.all()[0]
+        budget_estimate = BudgetEstimate.objects.filter(name='Total')[0]
+        # budget_estimate = BudgetEstimate.objects.all()[0]
         print("Budget cost "+ str(budget_estimate.cost))
         return render(
             request,
@@ -175,7 +176,8 @@ def budget_calc(request):
         # Get the default values
         budget_item_costs = BudgetItemCost.objects.all()
         department_costs = DepartmentCost.objects.all()
-        budget_estimate = BudgetEstimate.objects.all()[0]
+        budget_estimate = BudgetEstimate.objects.get(name='Total')
+        budget_sub_total = BudgetEstimate.objects.get(name='SubTotal')
 
         # budget_items = BudgetItem.objects.all()
         # budget_items(Insurance)
@@ -193,19 +195,23 @@ def budget_calc(request):
             ,{
                 "budget_item_costs": budget_item_costs,
                 "department_costs": department_costs,
-                "budget_estimate": budget_estimate                
+                "budget_estimate": budget_estimate,
+                "budget_sub_total": budget_sub_total                
         },)
         
     elif request.method == "GET":
         # get all the default values to display
         budget_item_costs = BudgetItemCost.objects.all()
         department_costs = DepartmentCost.objects.all()
-        budget_estimate = BudgetEstimate.objects.all()[0]
+        budget_estimate = BudgetEstimate.objects.get(name='Total')
+        budget_sub_total = BudgetEstimate.objects.get(name='SubTotal')
+        
         return render(request, "planner/budget.html"
         ,{
                 "budget_item_costs": budget_item_costs,
                 "department_costs": department_costs,
-                "budget_estimate": budget_estimate                
+                "budget_estimate": budget_estimate,
+                "budget_sub_total": budget_sub_total               
         },)
 
 def budget_adjustment(request):
@@ -215,11 +221,11 @@ def budget_adjustment(request):
         ground_unit = request.POST["ground_unit"]
         ground_unit_cost = request.POST["ground_unit_cost"]
 
-        print('Ground days '+str(ground_days)+
-        ' Ground unit'+str(ground_unit)+
-        ' Ground unit cost '+str(ground_unit_cost))
-        total = Calculations.sum(float(ground_days),float(ground_unit), float(ground_unit_cost))
-        print(total)
+        # print('Ground days '+str(ground_days)+
+        # ' Ground unit'+str(ground_unit)+
+        # ' Ground unit cost '+str(ground_unit_cost))
+        # total = Calculations.sum(float(ground_days),float(ground_unit), float(ground_unit_cost))
+        # print(total)
 
         ground_survey_budget_item = BudgetItem.objects.get(name='Ground Survey')
         print('Survey Budget Item')
@@ -407,9 +413,9 @@ def budget_adjustment(request):
             community_budget.totalCost,
             insurance_budget.totalCost)
 
-        sub_total_item = BudgetItem.objects.get(name='Subtotal')
-        sub_total_cost = BudgetItemCost.objects.filter(budget_item=sub_total_item)[0]
-        sub_total_cost.totalCost= sub_total
+        # sub_total_item = BudgetItem.objects.get(name='Subtotal')
+        sub_total_cost = BudgetEstimate.objects.get(name='SubTotal')
+        sub_total_cost.cost = sub_total
         sub_total_cost.save()
         print('subtotal ')
         print(sub_total)
@@ -449,10 +455,10 @@ def budget_adjustment(request):
 
         # budget_estimate.cost = sum_total
         # budget_estimate.save()
-        print(Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per)))
-        estimate = BudgetEstimate.objects.all()[0]
-        estimate.cost = sum_total
-        estimate.save()
+        # print(Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per)))
+        # estimate = BudgetEstimate.objects.all()[0]
+        # estimate.cost = sum_total
+        # estimate.save()
         # total_cost =Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per))
         # project_overhead_cost = BudgetItemCost.objects.filter(budget_item=project_overhead_budget_item)[0]
         # project_overhead_cost.totalCost = project_overhead_per
@@ -463,25 +469,28 @@ def budget_adjustment(request):
         calc.get_total_cost()
         budget_item_costs = BudgetItemCost.objects.all()
         department_costs = DepartmentCost.objects.all()
-        budget_estimate = BudgetEstimate.objects.all()[0]
-        
+        budget_estimate = BudgetEstimate.objects.get(name='Total')
+        budget_sub_total = BudgetEstimate.objects.get(name='SubTotal')      
         
 
         return render(request, "planner/budget.html"
         ,{
             "budget_item_costs": budget_item_costs,
-            "department_costs": department_costs,
-            "budget_estimate": budget_estimate                
+            "department_costs":department_costs,
+            "budget_estimate": budget_estimate,
+            "budget_sub_total":budget_sub_total              
         },)
     else:
         budget_item_costs = BudgetItemCost.objects.all()
         department_costs = DepartmentCost.objects.all()
-        budget_estimate = BudgetEstimate.objects.all()[0]
+        budget_estimate = BudgetEstimate.objects.get(name='Total')
+        budget_sub_total = BudgetEstimate.objects.get(name='SubTotal')
         return render(request, "planner/budget.html"
         ,{
             "budget_item_costs": budget_item_costs,
             "department_costs": department_costs,
-            "budget_estimate": budget_estimate                
+            "budget_estimate": budget_estimate,
+            "budget_sub_total": budget_sub_total             
         },)
 
 def get_default_values():
