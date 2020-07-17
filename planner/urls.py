@@ -13,5 +13,6 @@ urlpatterns = [
     path('drone',views.get_drone_values,name="drone"),
     path('survey',views.get_survey_values,name="survey"),
     path('budget',views.budget_calc,name="budget"),
-    path('budget_adjustment',views.budget_adjustment,name='budget_adjustment')
+    path('budget_adjustment',views.budget_adjustment,name='budget_adjustment'),
+    # path('home',views.home,name='home')
 ]

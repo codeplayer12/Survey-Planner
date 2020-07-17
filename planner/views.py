@@ -8,6 +8,11 @@ import json
 from django.core import serializers
 import requests
 
+# # Home 
+# def home(request):
+#     Calculations.home_view()    
+#     return render(request,'planner/index.html',{})
+
 # Create your views here.
 def index(request):
 
@@ -16,6 +21,8 @@ def index(request):
         camera_id = request.POST["camera"]
         survey_type_id = request.POST["survey_select"]
         take_of_area_distance = float(request.POST["take_of_area"])
+        size = int(request.POST["area_size"])
+        units = request.POST["units"]
         area_size = area_calc(int(request.POST["area_size"]), request.POST["units"])
         bttry_capacity = int(request.POST["battery_capacity"])
         flight_height = int(request.POST["flight_height"])
@@ -32,6 +39,9 @@ def index(request):
             take_of_area_distance,
             area_size,
             distance_travelled_per_flight,
+            size,
+            units,
+            drone_id,
         )
 
         
@@ -84,6 +94,8 @@ def index(request):
         survey_type_id = 1
         flight_height = 80
         bttry_capacity = 30
+        size=1
+        units='kilometres'
         area_size = 1
         distance_travelled_per_flight = 20988.14
         take_of_area_distance = 0.5
@@ -99,6 +111,8 @@ def index(request):
             take_of_area_distance,
             area_size,
             distance_travelled_per_flight,
+            size,units,
+            drone_id
         )
         planner_values = json.loads(cal.get_planner_display_values())
 
@@ -136,6 +150,7 @@ def area_calc(area, unit):
         return area * 10000
     else:
         return area
+
 
 
 def get_drone_values(request):
@@ -493,7 +508,7 @@ def budget_adjustment(request):
             "budget_sub_total": budget_sub_total             
         },)
 
-def get_default_values():
+def get_default_values(request):
     pass
 
 def credits(request):
