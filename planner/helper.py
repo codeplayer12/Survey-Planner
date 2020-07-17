@@ -1,4 +1,4 @@
-from .models import Camera,SurveyType, Drone, BudgetItem,Department,BudgetItemCost,DepartmentCost,BudgetEstimate
+from .models import Camera,SurveyType, Drone, BudgetItem,Department,BudgetItemCost,DepartmentCost,BudgetEstimate,PlannerValue
 from math import atan,degrees,radians,tan,sqrt,ceil
 import logging
 import json  
@@ -359,8 +359,8 @@ class Calculations(object):
 
         # Set received values for Camera and SurveyType
         self.set_camera_details()
-        self.set_survey_type_details()  
-        
+        self.set_survey_type_details() 
+
     def __str__(self):
         return "Camera id" +str(self.camera_id)+ "Survey id "+str(self.survey_type_id)+"Battery"+str(self.bttry_capacity)
 
@@ -475,7 +475,9 @@ class Calculations(object):
         number_of_flights = self.get_number_of_flights()
         total_size_of_digital_files = round((total_number_of_images_captured*self.per_image())/1000,1)
         duration_of_mission = ceil(number_of_flights/4)
-        area_size = self.area_normal()
+        area_size = self.size
+        units=self.units
+
 
         # print("{:.2f}".format(orthophoto_resolution))
 
@@ -495,6 +497,48 @@ class Calculations(object):
             "size": self.size,
             "units": self.units,
         }
+
+        planner_list = PlannerValue.objects.all()
+        if planner_list.count() != 0:
+            planner = planner_list[0]
+            planner.num_of_flights = number_of_flights
+            planner.ortho_reso = orthophoto_resolution
+            planner.dsm_reso = dsm_resolution
+            planner.num_images_captured = total_number_of_images_captured
+            planner.num_gigapixel = number_of_gigapixels
+            planner.total_digital_files = total_size_of_digital_files
+            planner.battery_capacity = self.bttry_capacity
+            planner.flight_height = self.flight_height
+            planner.take_of_area = self.take_of_area_distance
+            planner.size = self.size
+            planner.area_size = self.size
+            planner.units = self.units
+            planner.distance_travelled = self.distance_travelled_per_flight
+            planner.duration_mission = duration_of_mission
+            planner.camera_id = self.camera_id
+            planner.drone_id = self.drone_id
+            planner.survey_type_id = self.survey_type_id
+            planner.save()
+        else:
+            planner = PlannerValue()
+            planner.num_of_flights = number_of_flights
+            planner.ortho_reso = orthophoto_resolution
+            planner.dsm_reso = dsm_resolution
+            planner.num_images_captured = total_number_of_images_captured
+            planner.num_gigapixel = number_of_gigapixels
+            planner.total_digital_files = total_size_of_digital_files
+            planner.battery_capacity = self.bttry_capacity
+            planner.flight_height = self.flight_height
+            planner.take_of_area = self.take_of_area_distance
+            planner.size = self.size
+            planner.units = self.units
+            planner.distance_travelled = self.distance_travelled_per_flight
+            planner.duration_mission = duration_of_mission
+            planner.camera_id = self.camera_id
+            planner.drone_id = self.drone_id
+            planner.survey_type_id = self.survey_type_id
+            planner.save()
+
         return json.dumps(obj)
         # print("Number of flights : "+str(number_of_flights))
         # print("Orthophoto resolution : " +str(orthophoto_resolution))

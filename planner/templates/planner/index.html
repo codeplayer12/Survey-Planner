@@ -153,7 +153,7 @@
             <label for="lastName" class="col-sm-6 col-form-label">Battery capacity safety margin (%)</label>
             <div class="col-sm-6">
               <input type="number" class="form-control" min="0" name="battery_capacity" max="100"
-                value="{{planner_values.battery_capacity}}" id="battery_capacity">
+                value="{{planner_values.battery_capacity}}" id="battery_capacity" required>
             </div>
           </div>
           <hr class="mb-4">
@@ -161,14 +161,20 @@
           <div class="form-group row">
             <label for="lastName" class="col-sm-6 col-form-label">Area size and units</label>
             <div class="col-sm-3">
-              <input type="number" class="form-control" name="area_size" min="0" value="{{planner_values.area_size}}">
+              <input type="number" class="form-control" name="area_size" min="0" value="{{planner_values.area_size}}" required>
             </div>
             <div class="col-sm-3">
               <select name="units" class="custom-select d-block w-100 form-control">
-                <option value="meters" >m^2</option>
+                {% for el in area_units %}
+                {% if el.name == planner_values.units %}
+                <option value="{{ el.name }}" selected>{{el.unit}}</option>
+                {% endif %}
+                <option value="{{ el.name }}" >{{el.unit}}</option>
+                <!-- <option value="meters" >m^2</option>
                 <option value="kilometres" selected>km2</option>
                 <option value="acres">ar</option>
-                <option value="hactares">ha</option>
+                <option value="hactares">ha</option> -->
+                {% endfor %}
               </select>
             </div>
           </div>
@@ -203,7 +209,7 @@
             <label for="lastName" class="col-sm-6 col-form-label">Enter distance from take-off to survey area</label>
             <div class="col-sm-6">
               <input type="number" step="0.1" class="form-control" name="take_of_area" value="{{planner_values.take_of_area}}"
-                id="take_of_area" min="0.0">
+                id="take_of_area" min="0.0" required>
             </div>
           </div>
           <hr class="mb-4">
