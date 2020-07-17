@@ -3,76 +3,141 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from .helper import Calculations, BudgetCalculations
 from django.urls import reverse
-from .models import Camera, Drone, SurveyType, BudgetItem, BudgetEstimate,BudgetItemCost,DepartmentCost        
+from .models import Camera, Drone, SurveyType, BudgetItem, BudgetEstimate,BudgetItemCost,DepartmentCost,PlannerValue,AreaSizeAndUnit       
 import json
 from django.core import serializers
 import requests
+
+# Home 
+def home(request):
+    # Calculations.home_view() 
+    planner_values = PlannerValue.objects.all()[0]   
+
+    cameras = Camera.objects.all()
+    drones = Drone.objects.all()
+    surveys = SurveyType.objects.all()
+
+    select_survey = surveys.get(id=planner_values.survey_type_id)
+    select_drone = drones.get(id=planner_values.drone_id)
+    select_camera = cameras.get(id=planner_values.camera_id)
+    budget_estimate = BudgetEstimate.objects.get(name='Total')
+    print(budget_estimate)
+    return render(
+        request,
+        "planner/index.html",
+        {
+            "planner_values": planner_values,
+            "cameras": cameras,
+            "drones": drones,
+            "surveys": surveys,
+            "select_drone": select_drone,
+            "select_survey": select_survey,
+            "select_camera": select_camera,
+            "budget_estimate": budget_estimate
+        },
+    )
+    
 
 # Create your views here.
 def index(request):
 
     if request.method == "POST":
-        drone_id = request.POST["drone"]
-        camera_id = request.POST["camera"]
-        survey_type_id = request.POST["survey_select"]
-        take_of_area_distance = float(request.POST["take_of_area"])
-        area_size = area_calc(int(request.POST["area_size"]), request.POST["units"])
-        bttry_capacity = int(request.POST["battery_capacity"])
-        flight_height = int(request.POST["flight_height"])
+        if "back_button" in request.POST:
+            # Request from budget estimate back button
+            planner_values = PlannerValue.objects.all()[0]   
+            cameras = Camera.objects.all()
+            drones = Drone.objects.all()
+            surveys = SurveyType.objects.all()
+            area_units = AreaSizeAndUnit.objects.all()
+            select_survey = surveys.get(id=planner_values.survey_type_id)
+            select_drone = drones.get(id=planner_values.drone_id)
+            select_camera = cameras.get(id=planner_values.camera_id)
+            budget_estimate = BudgetEstimate.objects.get(name='Total')
+            print(budget_estimate)
+            return render(
+                request,
+                "planner/index.html",
+                {
+                    "planner_values": planner_values,
+                    "cameras": cameras,
+                    "drones": drones,
+                    "surveys": surveys,
+                    "select_drone": select_drone,
+                    "select_survey": select_survey,
+                    "select_camera": select_camera,
+                    "budget_estimate": budget_estimate,
+                    "area_units": area_units
+                },
+            )
 
-        selected_drone = Drone.objects.get(id=drone_id)
-        distance_travelled_per_flight = (
-            selected_drone.flightTime * 60 * selected_drone.cruiseSpeed
-        ) / (1 + (bttry_capacity / 100) + flight_height * (0.01 / 12.5))
-        cal = Calculations(
-            camera_id,
-            survey_type_id,
-            bttry_capacity,
-            flight_height,
-            take_of_area_distance,
-            area_size,
-            distance_travelled_per_flight,
-        )
+        else:
+            drone_id = request.POST["drone"]
+            camera_id = request.POST["camera"]
+            survey_type_id = request.POST["survey_select"]
+            take_of_area_distance = float(request.POST["take_of_area"])
+            size = int(request.POST["area_size"])
+            units = request.POST["units"]
+            area_size = area_calc(int(request.POST["area_size"]), request.POST["units"])
+            bttry_capacity = float(request.POST["battery_capacity"])
+            flight_height = float(request.POST["flight_height"])
 
-        
-        planner_values = json.loads(cal.get_planner_display_values())
-        # print(planner_values['num_of_flights'])
+            selected_drone = Drone.objects.get(id=drone_id)
+            distance_travelled_per_flight = (
+                selected_drone.flightTime * 60 * selected_drone.cruiseSpeed
+            ) / (1 + (bttry_capacity / 100) + flight_height * (0.01 / 12.5))
+            cal = Calculations(
+                camera_id,
+                survey_type_id,
+                bttry_capacity,
+                flight_height,
+                take_of_area_distance,
+                area_size,
+                distance_travelled_per_flight,
+                size,
+                units,
+                drone_id,
+            )
 
-        # Calculate days
-        cal = BudgetCalculations(planner_values['num_of_flights'], planner_values['num_images_captured'])
-        cal.set_days()
-        cal.calculate_budget_item_cost()
-        cal.get_total_cost()
+            
+            planner_values = json.loads(cal.get_planner_display_values())
+            # print(planner_values['num_of_flights'])
 
-        cameras = Camera.objects.all()
-        drones = Drone.objects.all()
-        surveys = SurveyType.objects.all()
+            # Calculate days
+            cal = BudgetCalculations(planner_values['num_of_flights'], planner_values['num_images_captured'])
+            cal.set_days()
+            cal.calculate_budget_item_cost()
+            cal.get_total_cost()
 
-        select_survey = surveys.get(id=survey_type_id)
-        select_drone = drones.get(id=drone_id)
-        select_camera = cameras.get(id=camera_id)
-        budget_estimate = BudgetEstimate.objects.get(name='Total')
-        print(budget_estimate)
-        return render(
-            request,
-            "planner/index.html",
-            {
-                "planner_values": planner_values,
-                "cameras": cameras,
-                "drones": drones,
-                "surveys": surveys,
-                "select_drone": select_drone,
-                "select_survey": select_survey,
-                "select_camera": select_camera,
-                "budget_estimate": budget_estimate
-            },
-        )
-    # except Exception as e:
-    #     return HttpResponse( str(e))
+            cameras = Camera.objects.all()
+            drones = Drone.objects.all()
+            surveys = SurveyType.objects.all()
+            area_units = AreaSizeAndUnit.objects.all()
+
+            select_survey = surveys.get(id=survey_type_id)
+            select_drone = drones.get(id=drone_id)
+            select_camera = cameras.get(id=camera_id)
+            budget_estimate = BudgetEstimate.objects.get(name='Total')
+            # print("New Budget "+budget_estimate)
+            return render(
+                request,
+                "planner/index.html",
+                {
+                    "planner_values": planner_values,
+                    "cameras": cameras,
+                    "drones": drones,
+                    "surveys": surveys,
+                    "select_drone": select_drone,
+                    "select_survey": select_survey,
+                    "select_camera": select_camera,
+                    "budget_estimate": budget_estimate,
+                    "area_units": area_units
+                },
+            )       
 
     cameras = Camera.objects.all()
     drones = Drone.objects.all()
     surveys = SurveyType.objects.all()
+    area_units = AreaSizeAndUnit.objects.all()
 
     try:
         # data = json.loads(request.body)
@@ -84,6 +149,8 @@ def index(request):
         survey_type_id = 1
         flight_height = 80
         bttry_capacity = 30
+        size=1
+        units='kilometres'
         area_size = 1
         distance_travelled_per_flight = 20988.14
         take_of_area_distance = 0.5
@@ -99,6 +166,8 @@ def index(request):
             take_of_area_distance,
             area_size,
             distance_travelled_per_flight,
+            size,units,
+            drone_id
         )
         planner_values = json.loads(cal.get_planner_display_values())
 
@@ -120,7 +189,8 @@ def index(request):
                 "select_drone": select_drone,
                 "select_survey": select_survey,
                 "select_camera": select_camera,
-                "budget_estimate": budget_estimate
+                "budget_estimate": budget_estimate,
+                "area_units": area_units
             },
         )
     except Exception as e:
@@ -136,6 +206,7 @@ def area_calc(area, unit):
         return area * 10000
     else:
         return area
+
 
 
 def get_drone_values(request):
@@ -493,7 +564,7 @@ def budget_adjustment(request):
             "budget_sub_total": budget_sub_total             
         },)
 
-def get_default_values():
+def get_default_values(request):
     pass
 
 def credits(request):

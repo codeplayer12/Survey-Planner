@@ -1,4 +1,4 @@
-from .models import Camera,SurveyType, Drone, BudgetItem,Department,BudgetItemCost,DepartmentCost,BudgetEstimate
+from .models import Camera,SurveyType, Drone, BudgetItem,Department,BudgetItemCost,DepartmentCost,BudgetEstimate,PlannerValue
 from math import atan,degrees,radians,tan,sqrt,ceil
 import logging
 import json  
@@ -344,7 +344,7 @@ class BudgetCalculations(object):
     
 class Calculations(object):
 
-    def __init__(self,camera_id,survey_type_id,bttry_capacity,flight_height,take_of_area_distance,area_size,distance_travelled_per_flight):
+    def __init__(self,camera_id,survey_type_id,bttry_capacity,flight_height,take_of_area_distance,area_size,distance_travelled_per_flight,size,units,drone_id):
         # super().__init__()
         self.camera_id = camera_id
         self.survey_type_id = survey_type_id
@@ -353,11 +353,14 @@ class Calculations(object):
         self.take_of_area_distance = take_of_area_distance
         self.area_size = area_size # Assumption that it is already in square meters
         self.distance_travelled_per_flight = distance_travelled_per_flight # Assumption that it is already in meters
+        self.size = size
+        self.units = units
+        self.drone_id = drone_id
 
         # Set received values for Camera and SurveyType
         self.set_camera_details()
-        self.set_survey_type_details()  
-        
+        self.set_survey_type_details() 
+
     def __str__(self):
         return "Camera id" +str(self.camera_id)+ "Survey id "+str(self.survey_type_id)+"Battery"+str(self.bttry_capacity)
 
@@ -472,6 +475,9 @@ class Calculations(object):
         number_of_flights = self.get_number_of_flights()
         total_size_of_digital_files = round((total_number_of_images_captured*self.per_image())/1000,1)
         duration_of_mission = ceil(number_of_flights/4)
+        area_size = self.size
+        units=self.units
+
 
         # print("{:.2f}".format(orthophoto_resolution))
 
@@ -485,12 +491,66 @@ class Calculations(object):
             "battery_capacity" :self.bttry_capacity,
             "flight_height":self.flight_height ,
             "take_of_area":self.take_of_area_distance ,
-            "area_size":self.area_size , 
+            "area_size":area_size , 
             "distance_travelled":self.distance_travelled_per_flight,
-            "duration_mission":duration_of_mission
+            "duration_mission":duration_of_mission,
+            "size": self.size,
+            "units": self.units,
         }
-        return json.dumps(obj)
 
+        planner_list = PlannerValue.objects.all()
+        if planner_list.count() != 0:
+            planner = planner_list[0]
+            planner.num_of_flights = number_of_flights
+            planner.ortho_reso = orthophoto_resolution
+            planner.dsm_reso = dsm_resolution
+            planner.num_images_captured = total_number_of_images_captured
+            planner.num_gigapixel = number_of_gigapixels
+            planner.total_digital_files = total_size_of_digital_files
+            planner.battery_capacity = self.bttry_capacity
+            planner.flight_height = self.flight_height
+            planner.take_of_area = self.take_of_area_distance
+            planner.size = self.size
+            planner.area_size = self.size
+            planner.units = self.units
+            planner.distance_travelled = self.distance_travelled_per_flight
+            planner.duration_mission = duration_of_mission
+            planner.camera_id = self.camera_id
+            planner.drone_id = self.drone_id
+            planner.survey_type_id = self.survey_type_id
+            planner.save()
+        else:
+            planner = PlannerValue()
+            planner.num_of_flights = number_of_flights
+            planner.ortho_reso = orthophoto_resolution
+            planner.dsm_reso = dsm_resolution
+            planner.num_images_captured = total_number_of_images_captured
+            planner.num_gigapixel = number_of_gigapixels
+            planner.total_digital_files = total_size_of_digital_files
+            planner.battery_capacity = self.bttry_capacity
+            planner.flight_height = self.flight_height
+            planner.take_of_area = self.take_of_area_distance
+            planner.size = self.size
+            planner.units = self.units
+            planner.distance_travelled = self.distance_travelled_per_flight
+            planner.duration_mission = duration_of_mission
+            planner.camera_id = self.camera_id
+            planner.drone_id = self.drone_id
+            planner.survey_type_id = self.survey_type_id
+            planner.save()
+
+        return json.dumps(obj)
+        # print("Number of flights : "+str(number_of_flights))
+        # print("Orthophoto resolution : " +str(orthophoto_resolution))
+        # print("DSM resolution : " +str(dsm_resolution))
+        # print('Total number of images captured : '+str(total_number_of_images_captured))
+        # print('Number of gigapixel : '+ str(number_of_gigapixels))
+        # print("pixel ground coverage lateral : "+str(self.get_pixel_ground_coverage_cm_lateral()) +"\n") 
+        # + ("pixel ground coverage forward : "+str(self.get_pixel_ground_coverage_cm_forward()))
+
+#    def item_calc_totals(self,day ,unit,unit_cost):
+#        total= day*unit*unit_cost
+#        return total
     def sum(*args):
         total = 1
         for i in args:
@@ -501,3 +561,31 @@ class Calculations(object):
         for i in args:
             total += i
         return total
+
+    def area_normal(self):
+        if self.units == "meters":
+            return self.size/1000000
+        elif self.units == "hactares":
+            return self.size / 100
+        elif self.units == "acres":
+            return self.size / 10000
+        else:
+            return self.size
+
+    # def get_total_cost(*args):
+    #     departments = Department.objects.all()
+    #     budget_estimate = 0.0
+    #     for department in departments:
+    #         budget_estimate += department_total_cost(department)
+    #     print('The total cost '+str(budget_estimate))    
+    #     return budget_estimate    
+
+    # def department_total_cost(self,department):
+    #    list_budget_items=BudgetItem.objects.filter(department_id=department.id)  
+    #    department_total_cost = 0.0
+    #    for budget_item in list_budget_items:
+    #         budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0]
+    #         department_total_cost += budget_item_cost.totalCost
+               
+    #    print("Department : "+department.name +" Total cost : "+str(department_total_cost))
+    #    return department_total_cost

@@ -45,18 +45,20 @@ class BudgetItem(models.Model):
         return self.name
 
 class PlannerValue(models.Model):
-    number_of_flights = models.IntegerField()
-    orthophoto_resolution = models.FloatField()
-    dsm_resolution = models.FloatField()
-    total_number_of_images_captured = models.IntegerField()
-    number_of_gigapixels = models.FloatField()
-    total_size_of_digital_files = models.FloatField()
+    num_of_flights = models.IntegerField()
+    ortho_reso = models.FloatField()
+    dsm_reso = models.FloatField()
+    num_images_captured = models.IntegerField()
+    num_gigapixel = models.FloatField()
+    total_digital_files = models.FloatField()
     battery_capacity = models.IntegerField()
     flight_height = models.FloatField()
-    take_off_area_distance = models.IntegerField()
+    take_of_area = models.FloatField()
+    size = models.IntegerField()
     area_size = models.IntegerField()
-    distance_travelled_per_flight = models.FloatField()
-    duration_of_mission = models.IntegerField()
+    units = models.CharField(max_length=50)
+    distance_travelled = models.FloatField()
+    duration_mission = models.IntegerField()
     camera_id = models.IntegerField()
     drone_id = models.IntegerField()
     survey_type_id = models.IntegerField()
@@ -64,6 +66,13 @@ class PlannerValue(models.Model):
 class BudgetEstimate(models.Model):
     name = models.CharField(max_length=40)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return str(self.name)
+
+class AreaSizeAndUnit(models.Model):
+    name = models.CharField(max_length=40)
+    unit = models.CharField(max_length=40)
 
     def __str__(self):
         return str(self.name)
@@ -91,6 +100,7 @@ class Default(models.Model):
     surveyType = models.IntegerField()
     batteryCapacity = models.IntegerField()
     areaSize  = models.IntegerField()
+    unit = models.CharField(max_length=255,default="kilometres")
     selectedMeasure = models.CharField(max_length=255)
     distance_travelled_per_flight = models.FloatField() 
     take_of_area_distance  = models.FloatField()
