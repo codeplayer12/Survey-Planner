@@ -10,8 +10,8 @@
 <body class="bg-light">
   <div class="container">
     {% load static %}
-    <img src="{% static "We_Robotics.png" %}" class="rounded float-left" alt="Left">
-      <img src="{% static "namibia.png" %}" class="rounded float-right" alt="right">
+      <a href="{% url 'https://werobotics.org/'}" target="_blank"><img src="{% static "We_Robotics.png" %}" class="rounded float-left" alt="Left"></a>
+      <a href="{% url 'https://flyinglabs.org/namibia/'}" target="_blank"><img src="{% static "namibia.png" %}" class="rounded float-right" alt="right"></a>
     <div class="py-5 text-center">
       <h2>Mission Planner</h2>
     </div>
