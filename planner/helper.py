@@ -490,17 +490,7 @@ class Calculations(object):
             "duration_mission":duration_of_mission
         }
         return json.dumps(obj)
-        # print("Number of flights : "+str(number_of_flights))
-        # print("Orthophoto resolution : " +str(orthophoto_resolution))
-        # print("DSM resolution : " +str(dsm_resolution))
-        # print('Total number of images captured : '+str(total_number_of_images_captured))
-        # print('Number of gigapixel : '+ str(number_of_gigapixels))
-        # print("pixel ground coverage lateral : "+str(self.get_pixel_ground_coverage_cm_lateral()) +"\n") 
-        # + ("pixel ground coverage forward : "+str(self.get_pixel_ground_coverage_cm_forward()))
 
-#    def item_calc_totals(self,day ,unit,unit_cost):
-#        total= day*unit*unit_cost
-#        return total
     def sum(*args):
         total = 1
         for i in args:
@@ -511,21 +501,3 @@ class Calculations(object):
         for i in args:
             total += i
         return total
-
-    # def get_total_cost(*args):
-    #     departments = Department.objects.all()
-    #     budget_estimate = 0.0
-    #     for department in departments:
-    #         budget_estimate += department_total_cost(department)
-    #     print('The total cost '+str(budget_estimate))    
-    #     return budget_estimate    
-
-    # def department_total_cost(self,department):
-    #    list_budget_items=BudgetItem.objects.filter(department_id=department.id)  
-    #    department_total_cost = 0.0
-    #    for budget_item in list_budget_items:
-    #         budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0]
-    #         department_total_cost += budget_item_cost.totalCost
-               
-    #    print("Department : "+department.name +" Total cost : "+str(department_total_cost))
-    #    return department_total_cost
