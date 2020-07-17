@@ -344,7 +344,7 @@ class BudgetCalculations(object):
     
 class Calculations(object):
 
-    def __init__(self,camera_id,survey_type_id,bttry_capacity,flight_height,take_of_area_distance,area_size,distance_travelled_per_flight):
+    def __init__(self,camera_id,survey_type_id,bttry_capacity,flight_height,take_of_area_distance,area_size,distance_travelled_per_flight,size,units,drone_id):
         # super().__init__()
         self.camera_id = camera_id
         self.survey_type_id = survey_type_id
@@ -353,6 +353,9 @@ class Calculations(object):
         self.take_of_area_distance = take_of_area_distance
         self.area_size = area_size # Assumption that it is already in square meters
         self.distance_travelled_per_flight = distance_travelled_per_flight # Assumption that it is already in meters
+        self.size = size
+        self.units = units
+        self.drone_id = drone_id
 
         # Set received values for Camera and SurveyType
         self.set_camera_details()
@@ -472,6 +475,7 @@ class Calculations(object):
         number_of_flights = self.get_number_of_flights()
         total_size_of_digital_files = round((total_number_of_images_captured*self.per_image())/1000,1)
         duration_of_mission = ceil(number_of_flights/4)
+        area_size = self.area_normal()
 
         # print("{:.2f}".format(orthophoto_resolution))
 
@@ -485,9 +489,11 @@ class Calculations(object):
             "battery_capacity" :self.bttry_capacity,
             "flight_height":self.flight_height ,
             "take_of_area":self.take_of_area_distance ,
-            "area_size":self.area_size , 
+            "area_size":area_size , 
             "distance_travelled":self.distance_travelled_per_flight,
-            "duration_mission":duration_of_mission
+            "duration_mission":duration_of_mission,
+            "size": self.size,
+            "units": self.units,
         }
         return json.dumps(obj)
         # print("Number of flights : "+str(number_of_flights))
@@ -511,6 +517,16 @@ class Calculations(object):
         for i in args:
             total += i
         return total
+
+    def area_normal(self):
+        if self.units == "meters":
+            return self.size/1000000
+        elif self.units == "hactares":
+            return self.size / 100
+        elif self.units == "acres":
+            return self.size / 10000
+        else:
+            return self.size
 
     # def get_total_cost(*args):
     #     departments = Department.objects.all()

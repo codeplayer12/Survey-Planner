@@ -91,6 +91,7 @@ class Default(models.Model):
     surveyType = models.IntegerField()
     batteryCapacity = models.IntegerField()
     areaSize  = models.IntegerField()
+    unit = models.CharField(max_length=255,default="kilometres")
     selectedMeasure = models.CharField(max_length=255)
     distance_travelled_per_flight = models.FloatField() 
     take_of_area_distance  = models.FloatField()
