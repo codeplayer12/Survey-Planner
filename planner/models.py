@@ -104,3 +104,10 @@ class Default(models.Model):
     selectedMeasure = models.CharField(max_length=255)
     distance_travelled_per_flight = models.FloatField() 
     take_of_area_distance  = models.FloatField()
+
+class Currency(models.Model):
+    ticker = models.CharField(max_length=255)
+    name =   models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name  

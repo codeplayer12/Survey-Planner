@@ -42,8 +42,8 @@
                 {% for budget_item_cost in budget_item_costs %}
                     {% if  budget_item_cost.budget_item.name == 'Ground Survey' %}        
                 <td><input type="number" class="form-control" min="0" name="ground_days" id="ground_days" max="100" readonly value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" name="ground_unit" id="ground_unit" value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="ground_unit_cost" id="ground_unit_cost" value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" name="ground_unit" id="ground_unit" value ={{budget_item_cost.units}} readonly></td>
+                <td><input type="number" class="form-control" min="0" name="ground_unit_cost" id="ground_unit_cost" value ={{budget_item_cost.unitCost}} readonly></td>
                 <td><input type="number" class="form-control" min="0" name="ground_total" id="ground_total" readonly value ={{budget_item_cost.totalCost}}></td>
                   {% endif %}
                 {% endfor %} 
@@ -134,8 +134,8 @@
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Laptop Rental' %}
                 <td><input type="number" class="form-control" min="0" name="laptop_r_days" max="100" readonly value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" name="laptop_r_unit_cost" value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="laptop_r_unit" readonly value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" name="laptop_r_unit_cost" value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" name="laptop_r_unit" readonly value ={{budget_item_cost.unitCost}}></td>
                 <td><input type="number" class="form-control" min="0" name="laptop_r_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %} 

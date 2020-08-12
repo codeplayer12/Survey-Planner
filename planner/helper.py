@@ -278,7 +278,7 @@ class BudgetCalculations(object):
             if budget_item.name =="Ground Survey": 
                 budget_item_cost = BudgetItemCost.objects.filter(budget_item=budget_item)[0] 
                 budget_item_cost.units= 0.0
-                budget_item_cost.unitCost= 400.0
+                budget_item_cost.unitCost= 0.0 # Changed unit cost from 400 to 0.0
                 budget_item_cost.totalCost= 0.0
                 budget_item_cost.days= 0.0
                 budget_item_cost.save()                      

@@ -5,6 +5,8 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js">
   <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+  
 </head>
 
 <body class="bg-light">
@@ -87,10 +89,27 @@
         <input type="number" id="selected_drone" name="selected_drone" value="{{ select_drone.id }}" hidden>
         <ul class="list-group mb-3">
           <li class="list-group-item d-flex justify-content-between">
-            <span>Budget (NAD)</span>
-            <strong>{{ budget_estimate.cost }}</strong>
+            <span>Budget (USD)</span>
+            <strong id='budget_estimate'>{{ budget_estimate.cost }}</strong>
           </li>
-        </ul>        
+        </ul>    
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Convert Budget Estimate Currency</span>
+        </h4>    
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex justify-content-between">
+              <select id='select_currency' name='select_currency' class="js-example-basic-single">              
+              {% for curr in currencies %}
+                <option value={{curr.ticker}}>{{curr.name}}</option>
+              {% endfor %}
+            </select>          
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span id='selected_currency'>Currency </span>
+            <strong id='converted_amount'>0 </strong>
+          </li>
+        </ul> 
+          
             <button type="submit" class="btn btn-secondary btn-lg btn-block">View Budget</button>
        </form>
        
@@ -194,7 +213,7 @@
           <div class="form-group row">
             <label for="lastName" class="col-sm-6 col-form-label">Forward image overlap</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" name"forward" min="0" value="{{select_survey.forward}}"
+              <input type="number" class="form-control" name="forward" min="0" value="{{select_survey.forward}}"
                 id="forward" disabled>
             </div>
           </div>
@@ -225,8 +244,14 @@
   </div>
   {% block javascript %}
   <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
   <script>
     $(function () {
+      $(document).ready(function() {
+          $('.js-example-basic-single').select2();
+      });
+
+
       $(document).on('change', "#drone", function (e) {
         let value = $(this).val();
         $('#selected_drone').val(value);
@@ -268,6 +293,33 @@
           survey = response.data;
           $('#forward').val(survey.forward);
           $('#lateral').val(survey.lateral);
+        });
+      });
+
+      $(document).on('change', "#select_currency", function (e) {
+        var value = $(this).val();
+        console.log(value);
+        var data = {
+           'app_id':'006d11f8806e416cae444672c0bcadb3'
+        };
+        var settings = {
+          "url": "https://openexchangerates.org/api/latest.json",
+          "method": "GET",
+          "timeout": 0,
+          "data": data,
+        };
+        $.ajax(settings).done(function (response) {
+          console.log(value)
+          //console.log("1 US Dollar equals " + response.rates[value]+ " South African Rands");
+          
+          exchange_rate = response.rates[value]
+          converted_amount = $('#budget_estimate').text() * exchange_rate
+          $('#converted_amount').text(converted_amount.toFixed(2))
+          $('#selected_currency').text('Budget ('+value+')')
+
+          
+          // $('#forward').val(survey.forward);
+          // $('#lateral').val(survey.lateral);
         });
       });
 

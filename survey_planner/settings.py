@@ -120,7 +120,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
@@ -130,3 +130,17 @@ try:
     from .local_settings import *
 except ImportError:
     print("Looks like no local file. You must be on production")
+
+
+
+# http://data.fixer.io/api/convert
+
+#     ? access_key = d03cd16e689366121f908ac91c6c104c
+#     & from = USD
+#     & to = EUR
+#     & amount = 25
+
+# http://data.fixer.io/api/latest?access_key=d03cd16e689366121f908ac91c6c104c
+
+# https://openexchangerates.org/api/convert/19999.95/GBP/EUR?app_id=YOUR_APP_ID
+# 006d11f8806e416cae444672c0bcadb3
