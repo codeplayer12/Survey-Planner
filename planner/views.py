@@ -86,8 +86,18 @@ def index(request):
             flight_height = float(request.POST["flight_height"])
 
             selected_drone = Drone.objects.get(id=drone_id)
+            flight_time = 0
+            cruise_speed = 0
+            if selected_drone.name == 'Custom':
+                flight_time = float(request.POST["flight_time"])
+                cruise_speed = float(request.POST["cruise_speed"])
+                print("Flight time : "+str(flight_time)+ "Cruise Speed : "+str(cruise_speed))
+            else:
+                flight_time = selected_drone.flightTime
+                cruise_speed = selected_drone.cruiseSpeed
+            
             distance_travelled_per_flight = (
-                selected_drone.flightTime * 60 * selected_drone.cruiseSpeed
+                flight_time * 60 * cruise_speed
             ) / (1 + (bttry_capacity / 100) + flight_height * (0.01 / 12.5))
             cal = Calculations(
                 camera_id,
