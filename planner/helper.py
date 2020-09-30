@@ -62,7 +62,7 @@ class BudgetCalculations(object):
         drone_r =  d_pilots
         laptop_r = ground_s+d_pilots+gis
        
-        local_acc= ground_s+d_pilots+gis        
+        local_acc = ground_s+d_pilots+gis        
 
         for budget_item in budget_items:
             if budget_item.name == "International support": 

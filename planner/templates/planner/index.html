@@ -5,15 +5,13 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js">
   <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js">
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-  
 </head>
 
 <body class="bg-light">
   <div class="container">
     {% load static %}
-      <a href="https://werobotics.org/'" target="_blank"><img src="{% static "We_Robotics.png" %}" class="rounded float-left" alt="Left"></a>
-      <a href="https://flyinglabs.org/namibia/" target="_blank"><img src="{% static "namibia.png" %}" class="rounded float-right" alt="right"></a>
+    <img src="{% static "We_Robotics.png" %}" class="rounded float-left" alt="Left">
+      <img src="{% static "namibia.png" %}" class="rounded float-right" alt="right">
     <div class="py-5 text-center">
       <h2>Mission Planner</h2>
     </div>
@@ -89,27 +87,10 @@
         <input type="number" id="selected_drone" name="selected_drone" value="{{ select_drone.id }}" hidden>
         <ul class="list-group mb-3">
           <li class="list-group-item d-flex justify-content-between">
-            <span>Budget (USD)</span>
-            <strong id='budget_estimate'>{{ budget_estimate.cost }}</strong>
+            <span>Budget (NAD)</span>
+            <strong>{{ budget_estimate.cost }}</strong>
           </li>
-        </ul>    
-        <h4 class="d-flex justify-content-between align-items-center mb-3">
-          <span class="text-muted">Convert Budget Estimate Currency</span>
-        </h4>    
-        <ul class="list-group mb-3">
-          <li class="list-group-item d-flex justify-content-between">
-              <select id='select_currency' name='select_currency' class="js-example-basic-single">              
-              {% for curr in currencies %}
-                <option value={{curr.ticker}}>{{curr.name}}</option>
-              {% endfor %}
-            </select>          
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span id='selected_currency'>Currency </span>
-            <strong id='converted_amount'>0 </strong>
-          </li>
-        </ul> 
-          
+        </ul>        
             <button type="submit" class="btn btn-secondary btn-lg btn-block">View Budget</button>
        </form>
        
@@ -150,23 +131,29 @@
           <div class="form-group row">
             <label for="flight_height" class="col-sm-6 col-form-label">Flight height above ground(meters)</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" name="flight_height" value="{{planner_values.flight_height}}"
-                min="0" id="flight_height" required>
+              <input type="number" class="form-control" value="{{planner_values.flight_height}}"
+                min="0" id="flight_height" name="flight_height" required>
             </div>
           </div>
           <div class="form-group row">
             <label for="lastName" class="col-sm-6 col-form-label">Drone autonomy (minutes)</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" min="0" disabled value="{{ select_drone.flightTime}}"
+            <input type="number" class="form-control" min="0" disabled value="{{ select_drone.flightTime}}"
                 id="flightTime">
             </div>
+            <input type="number" class="form-control" min="0" value="{{ select_drone.flightTime}}"
+              name="flight_time" hidden>
+            
           </div>
           <div class="form-group row">
             <label for="lastName" class="col-sm-6 col-form-label">Drone flight speed (meters per second)</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" min="0" disabled value="{{ select_drone.cruiseSpeed}}"
-                id="cruiseSpeed">
+            <input type="number" class="form-control" min="0" disabled value="{{ select_drone.cruiseSpeed}}"
+                id="cruiseSpeed" name="cruiseSpeed">
             </div>
+            <input type="number" class="form-control" min="0" value="{{ select_drone.cruiseSpeed}}"
+              name="cruise_speed" hidden>
+            
           </div>
           <div class="form-group row">
             <label for="lastName" class="col-sm-6 col-form-label">Battery capacity safety margin (%)</label>
@@ -213,7 +200,7 @@
           <div class="form-group row">
             <label for="lastName" class="col-sm-6 col-form-label">Forward image overlap</label>
             <div class="col-sm-6">
-              <input type="number" class="form-control" name="forward" min="0" value="{{select_survey.forward}}"
+              <input type="number" class="form-control" name"forward" min="0" value="{{select_survey.forward}}"
                 id="forward" disabled>
             </div>
           </div>
@@ -239,22 +226,27 @@
     </div>
     <br>
     <footer class="text-center py-2">
-      <p>EZ Survey <a href="/credit" >credits</a></p>
+      <p><a href="/credit">EZ Survey credit</a></p>
       </footer>
   </div>
   {% block javascript %}
   <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
   <script>
     $(function () {
-      $(document).ready(function() {
-          $('.js-example-basic-single').select2();
-      });
-
-
       $(document).on('change', "#drone", function (e) {
+        //First check the value is custom and then is no need to go to the database
+        if($(this).find("option:selected").text()=='Custom'){
+          $('#flightTime').prop( "disabled", false);
+          $('#cruiseSpeed').prop( "disabled", false);
+
+        }else{   
+          //Disable
+          $('#flightTime').prop( "disabled", true);
+          $('#cruiseSpeed').prop( "disabled", true);
+     
         let value = $(this).val();
         $('#selected_drone').val(value);
+        
         var data = { value };
         var settings = {
           "url": "{% url 'drone' %}",
@@ -273,10 +265,17 @@
           // $('#selected_drone').val(drone.id);
           // console.log("Selected drone id " +)
         });
+       }
       });
 
-
       $(document).on('change', "#survey_select", function (e) {
+        if($(this).find("option:selected").text()=='Custom'){
+          $('#forward').prop( "disabled", false);
+          $('#lateral').prop( "disabled", false);
+        }else{   
+          //Disable to get values from the database
+          $('#forward').prop( "disabled", true);
+          $('#lateral').prop( "disabled", true);
         let value = $(this).val();
         var data = { value };
         var settings = {
@@ -294,33 +293,7 @@
           $('#forward').val(survey.forward);
           $('#lateral').val(survey.lateral);
         });
-      });
-
-      $(document).on('change', "#select_currency", function (e) {
-        var value = $(this).val();
-        console.log(value);
-        var data = {
-           'app_id':'006d11f8806e416cae444672c0bcadb3'
-        };
-        var settings = {
-          "url": "https://openexchangerates.org/api/latest.json",
-          "method": "GET",
-          "timeout": 0,
-          "data": data,
-        };
-        $.ajax(settings).done(function (response) {
-          console.log(value)
-          //console.log("1 US Dollar equals " + response.rates[value]+ " South African Rands");
-          
-          exchange_rate = response.rates[value]
-          converted_amount = $('#budget_estimate').text() * exchange_rate
-          $('#converted_amount').text(converted_amount.toFixed(2))
-          $('#selected_currency').text('Budget ('+value+')')
-
-          
-          // $('#forward').val(survey.forward);
-          // $('#lateral').val(survey.lateral);
-        });
+       }
       });
 
     });
