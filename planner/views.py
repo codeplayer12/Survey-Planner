@@ -91,14 +91,38 @@ def index(request):
             if selected_drone.name == 'Custom':
                 flight_time = float(request.POST["flight_time"])
                 cruise_speed = float(request.POST["cruise_speed"])
+                # Save the new custom values to the database so that they can be sent back correctly to the UI
+                custom_drone = Drone.objects.get(pk=selected_drone.id)
+                custom_drone.cruiseSpeed = cruise_speed
+                custom_drone.flightTime = flight_time
+                custom_drone.save()
+                print("\n"+"New drone name "+ custom_drone.name + "Cruise speed "+str(custom_drone.cruiseSpeed) +"Flight time"+str(custom_drone.flightTime)+"\n")
                 print("Flight time : "+str(flight_time)+ "Cruise Speed : "+str(cruise_speed))
             else:
                 flight_time = selected_drone.flightTime
                 cruise_speed = selected_drone.cruiseSpeed
             
+            #Check if the survey type is Custom and set appropriate values
+            selected_survey = SurveyType.objects.get(id=survey_type_id)
+            if selected_survey.name == 'Custom':
+                forward = float(request.POST["custom_forward"])
+                lateral = float(request.POST["custom_lateral"])
+                # Save the new custom values to the database so that they can be sent back correctly to the UI
+                SurveyType.objects.filter(pk=selected_survey.id).update(forward=forward, lateral=lateral)
+                # custom_survey.forward = forward
+                # custom_survey.lateral = lateral
+                # custom_survey.save()
+                custom_survey = SurveyType.objects.get(pk=selected_survey.id)
+                print("\n"+"New survey name "+ custom_survey.name + "forward "+str(custom_survey.forward) +"lateral"+str(custom_survey.lateral)+"\n")
+                print("Forward: " +str(forward)+ "Lateral : " +str(lateral))
+
+            # Calculate distance travelled per flight
+
             distance_travelled_per_flight = (
                 flight_time * 60 * cruise_speed
             ) / (1 + (bttry_capacity / 100) + flight_height * (0.01 / 12.5))
+
+            # Perform non-budget calculations
             cal = Calculations(
                 camera_id,
                 survey_type_id,
