@@ -124,10 +124,7 @@
               <select name="drone" class="custom-select d-block w-100 form-control" onselect="get_drone_details()"
                 id="drone">
                 {% for el in drones %}
-                {% if select_drone.id == el.id %}
-                <option value={{el.id}} selected>{{el.name}}</option>
-                {% endif %}
-                <option value={{el.id}}>{{el.name}}</option>
+                <option value="{{el.id}}" {% if select_drone.id == el.id  %} selected {% endif %}>{{el.name}}</option>
                 {% endfor %}
               </select>
             </div>
@@ -137,10 +134,7 @@
             <div class="col-sm-6">
               <select name="camera" class="custom-select d-block w-100 form-control">
                 {% for el in cameras %}
-                {% if select_camera.id == el.id %}
-                <option value={{el.id}} selected>{{el.camera_type}}</option>
-                {% endif %}
-                <option value={{el.id}}>{{el.camera_type}}</option>
+                <option value="{{el.id}}" {% if select_camera.id == el.id  %} selected {% endif %}>{{el.camera_type}}</option>
                 {% endfor %}
               </select>
             </div>
@@ -159,6 +153,8 @@
             <div class="col-sm-6">
               <input type="number" class="form-control" min="0" disabled value="{{ select_drone.flightTime}}"
                 id="flightTime">
+                <input type="number" class="form-control" min="0" value="{{ select_drone.flightTime}}"
+                name="flight_time" hidden>
             </div>
           </div>
           <div class="form-group row">
@@ -166,6 +162,8 @@
             <div class="col-sm-6">
               <input type="number" class="form-control" min="0" disabled value="{{ select_drone.cruiseSpeed}}"
                 id="cruiseSpeed">
+              <input type="number" class="form-control" min="0" value="{{ select_drone.cruiseSpeed}}"
+                name="cruise_speed" hidden>  
             </div>
           </div>
           <div class="form-group row">
@@ -185,10 +183,8 @@
             <div class="col-sm-3">
               <select name="units" class="custom-select d-block w-100 form-control">
                 {% for el in area_units %}
-                {% if el.name == planner_values.units %}
-                <option value="{{ el.name }}" selected>{{el.unit}}</option>
-                {% endif %}
-                <option value="{{ el.name }}" >{{el.unit}}</option>
+                <option value="{{el.name}}" {% if el.name == planner_values.units  %} selected {% endif %}>{{el.unit}}</option>
+          
                 <!-- <option value="meters" >m^2</option>
                 <option value="kilometres" selected>km2</option>
                 <option value="acres">ar</option>
@@ -202,10 +198,7 @@
             <div class="col-sm-6">
               <select name="survey_select" class="custom-select d-block w-100 form-control" id="survey_select">
                 {% for el in surveys %}
-                {% if select_survey.id == el.id %}
-                <option value={{el.id}} selected>{{el.name}}</option>
-                {% endif %}
-                <option value={{el.id}}>{{el.name}}</option>
+                   <option value="{{el.id}}" {% if select_survey.id  ==  el.id  %} selected {% endif %}>{{el.name}}</option>
                 {% endfor %}
               </select>
             </div>
@@ -215,6 +208,8 @@
             <div class="col-sm-6">
               <input type="number" class="form-control" name="forward" min="0" value="{{select_survey.forward}}"
                 id="forward" disabled>
+                <input type="number" class="form-control" min="0" value="{{select_survey.forward}}"
+                name="custom_forward" hidden> 
             </div>
           </div>
           <div class="form-group row">
@@ -222,6 +217,8 @@
             <div class="col-sm-6">
               <input type="number" class="form-control" name="lateral" min="0" value="{{select_survey.lateral}}"
                 id="lateral" disabled>
+                <input type="number" class="form-control" min="0" value="{{select_survey.lateral}}"
+                name="custom_lateral" hidden>
             </div>
           </div>
           <div class="form-group row">
@@ -254,6 +251,16 @@
 
 
       $(document).on('change', "#drone", function (e) {
+        //First check the value is custom and then is no need to go to the database
+        if($(this).find("option:selected").text()=='Custom'){
+          $('#flightTime').prop( "disabled", false);
+          $('#cruiseSpeed').prop( "disabled", false);
+
+        }else{   
+          //Disable
+          $('#flightTime').prop( "disabled", true);
+          $('#cruiseSpeed').prop( "disabled", true);
+
         let value = $(this).val();
         $('#selected_drone').val(value);
         var data = { value };
@@ -274,10 +281,18 @@
           // $('#selected_drone').val(drone.id);
           // console.log("Selected drone id " +)
         });
+       }
       });
 
 
       $(document).on('change', "#survey_select", function (e) {
+        if($(this).find("option:selected").text()=='Custom'){
+          $('#forward').prop( "disabled", false);
+          $('#lateral').prop( "disabled", false);
+        }else{   
+          //Disable to get values from the database
+          $('#forward').prop( "disabled", true);
+          $('#lateral').prop( "disabled", true);
         let value = $(this).val();
         var data = { value };
         var settings = {
@@ -295,6 +310,7 @@
           $('#forward').val(survey.forward);
           $('#lateral').val(survey.lateral);
         });
+        }
       });
 
       $(document).on('change', "#select_currency", function (e) {
