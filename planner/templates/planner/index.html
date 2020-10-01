@@ -108,8 +108,7 @@
             <span id='selected_currency'>Currency </span>
             <strong id='converted_amount'>0 </strong>
           </li>
-        </ul> 
-          
+        </ul>           
             <button type="submit" class="btn btn-secondary btn-lg btn-block">View Budget</button>
        </form>
        
@@ -222,7 +221,7 @@
             </div>
           </div>
           <div class="form-group row">
-            <label for="lastName" class="col-sm-6 col-form-label">Enter distance from take-off to survey area</label>
+            <label for="lastName" class="col-sm-6 col-form-label" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Distance from take-off to survey area</label>
             <div class="col-sm-6">
               <input type="number" step="0.1" class="form-control" name="take_of_area" value="{{planner_values.take_of_area}}"
                 id="take_of_area" min="0.0" required>
