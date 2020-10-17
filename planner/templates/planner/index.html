@@ -26,14 +26,14 @@
           <span class="text-muted">Mission Estimates</span>
         </h4>
       
-        <form action="{% url 'budget'%}" method="POST"> {% csrf_token %}
+        <form action="{% url 'budget'%}" method="POST" id="form"> {% csrf_token %}
           <ul class="list-group mb-3">          
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
               <h6 class="my-0">Number of flights</h6>
             </div>
             <span class="text-muted" id="num_flights">{{ planner_values.num_of_flights }}</span>
-            <input type="number" id="num_flights" name="num_flights" value="{{ planner_values.num_of_flights }}" hidden> 
+            <input type="number" class='test' id="num_flights" name="num_flights" value="{{ planner_values.num_of_flights }}" hidden> 
           </li>
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
@@ -115,7 +115,7 @@
       
       </div>
       <div class="col-md-8 order-md-1">
-        <form action="{% url 'index'%}" class="card p-2" method="POST"> {% csrf_token %}
+        <form action="{% url 'index'%}" class="card p-2 test" method="POST"> {% csrf_token %}
           <h3 class="mb-3 text-muted">Drone Type</h3>
           <div class="form-group row">
             <label for="lastName" class="col-sm-6 col-form-label">Drone model</label>
@@ -339,7 +339,13 @@
         });
       });
 
+     $(document).on('change keyup', "form", function(e){
+       e.preventDefault();
+       $(this).closest('.test').submit();
+     })
     });
+    
+
   </script>
   {% endblock javascript %}
 </body>
