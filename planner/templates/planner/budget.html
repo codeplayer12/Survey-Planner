@@ -269,13 +269,13 @@
               </tr> 
               <tr>
                 <th scope="row"></th>
-                <td colspan='3'>Project Management 10%</td>  
+                <td>Project Management (%)</td>  
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Project Management' %}              
-                {% comment %} <td><input type="number" class="form-control" min="0" name="project_m_unit" readonly value ={{budget_item_cost.units}}></td> {% endcomment %}
+                <td><input type="number" class="form-control" min="0" name="project_m_unit"  value ={{budget_item_cost.units}}></td>
                 <td><input type="number" class="form-control" min="0" name="project_m_unit_cost" readonly value ={{budget_item_cost.unitCost}} hidden></td>
-                <td><input type="number" class="form-control" min="0" name="project_m_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 <td></td>
+                <td><input type="number" class="form-control" min="0" name="project_m_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %}
               </tr>  
@@ -283,11 +283,11 @@
                 <th scope="row"></th>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Project Overhead' %} 
-                <td colspan='3'><input type="hidden" value={{budget_item_cost.budget_item.name}}/>{{budget_item_cost.budget_item.name}} 5%</td>
-                {% comment %} <td><input type="number" class="form-control" min="0" name="project_o_unit" readonly value ={{budget_item_cost.units}}></td> {% endcomment %}
+                <td><input type="hidden" value={{budget_item_cost.budget_item.name}}/>{{budget_item_cost.budget_item.name}} (%)</td>
+                <td><input type="number" class="form-control" min="0" name="project_o_unit" readonly value ={{budget_item_cost.units}}></td>
                 <td><input type="number" class="form-control" min="0" name="project_o_unit_cost" readonly value ={{budget_item_cost.unitCost}} hidden></td>
-                <td><input type="number" class="form-control" min="0" name="project_o_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 <td></td>
+                <td><input type="number" class="form-control" min="0" name="project_o_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %}
               </tr>                    
