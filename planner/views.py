@@ -536,11 +536,14 @@ def budget_adjustment(request):
         # # Project Management 10%
         # project_m_unit = request.POST["project_m_unit"]
         project_m_unit_cost = request.POST["project_m_unit_cost"]
+        # convert to percentage before calculation
+        project_m_unit_cost = float(project_m_unit_cost)/100
         projectmanagement_per = Calculations.sum(float(project_m_unit_cost),float(sub_total))
 
         project_management_budget_item = BudgetItem.objects.get(name='Project Management')
         project_management_cost = BudgetItemCost.objects.filter(budget_item=project_management_budget_item)[0]
         project_management_cost.totalCost = projectmanagement_per
+        project_management_cost.unitCost = project_m_unit_cost
         project_management_cost.save()
         print("10% of subtotal Project Management")
         print(Calculations.sum(float(project_m_unit_cost),float(sub_total)))
@@ -548,6 +551,7 @@ def budget_adjustment(request):
         # # Project Overhead 15%
         # project_o_unit = request.POST["project_o_unit"]
         project_o_unit_cost = request.POST["project_o_unit_cost"]
+        project_o_unit_cost = float(project_o_unit_cost)/100
         project_overhead_per = Calculations.sum(float(project_o_unit_cost),float(sub_total))
 
         # Calculations.sum(float(insurance_unit),float(insurance_unit_cost))
@@ -555,6 +559,7 @@ def budget_adjustment(request):
         project_overhead_budget_item = BudgetItem.objects.get(name='Project Overhead')
         project_overhead_cost = BudgetItemCost.objects.filter(budget_item=project_overhead_budget_item)[0]
         project_overhead_cost.totalCost = project_overhead_per
+        project_management_cost.unitCost = project_o_unit_cost
         project_overhead_cost.save()
         print("5% of subtotal Project Overhead")
         print(Calculations.sum(float(project_o_unit_cost),float(sub_total)))
