@@ -358,11 +358,21 @@
         });
       });
 
-      $(document).on('change keyup', ".test", function(e){
+      $('.test').on('change focusout',function (e){
         e.preventDefault();
-        $(this).closest('.test').submit();
-      });
-    });
+        var data = $(this).serialize();
+ 
+        $.ajax({
+          type: 'POST',
+          url:"{% url 'budget_adjustment' %}",
+          data: data,
+          success: function(response){
+           location.reload();
+          }
+        })
+      })
+     });
+    
 
 
   </script>
