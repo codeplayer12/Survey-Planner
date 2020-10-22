@@ -91,8 +91,9 @@ def index(request):
             if selected_drone.name == 'Custom':
                 flight_time = float(request.POST["flight_time"])
                 cruise_speed = float(request.POST["cruise_speed"])
+                print("Received values are flight time "+str(flight_time)+ " cruise speed "+str(cruise_speed))
                 # Save the new custom values to the database so that they can be sent back correctly to the UI
-                custom_drone = Drone.objects.get(pk=selected_drone.id)
+                custom_drone = Drone.objects.get(name='Custom')
                 custom_drone.cruiseSpeed = cruise_speed
                 custom_drone.flightTime = flight_time
                 custom_drone.save()
@@ -108,7 +109,10 @@ def index(request):
                 forward = float(request.POST["custom_forward"])
                 lateral = float(request.POST["custom_lateral"])
                 # Save the new custom values to the database so that they can be sent back correctly to the UI
-                SurveyType.objects.filter(pk=selected_survey.id).update(forward=forward, lateral=lateral)
+                modifiedSurvey =  SurveyType.objects.get(name='Custom')
+                modifiedSurvey.forward=forward
+                modifiedSurvey.lateral=lateral
+                modifiedSurvey.save()
                 # custom_survey.forward = forward
                 # custom_survey.lateral = lateral
                 # custom_survey.save()

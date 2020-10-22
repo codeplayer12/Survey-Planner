@@ -48,8 +48,13 @@
                   {% endif %}
                 {% endfor %} 
               </tr>
-              <tr>
-                <th scope="row"></th>
+              <tr id="row_int_support">
+                <th scope="row">
+                  <div>
+                    <label for="check_int_support">Disable</label> <br>
+                    <input type="checkbox" id="check_int_support" name="check_int_support" onchange="checkChanged()">
+                  </div>
+                </th>
                 <td>International Support</td>
                 {% for budget_item_cost in budget_item_costs %}
                     {% if  budget_item_cost.budget_item.name == 'International support' %}   
@@ -240,7 +245,7 @@
                 <td>Insurance</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Insurance' %}
-                <td><input type="number" class="form-control" min="0" name="insurance_days" max="100" readonly value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" name="insurance_days" max="100" readonly value ={{budget_item_cost.days}} hidden></td>
                 <td><input type="number" class="form-control" min="0" name="insurance_unit" readonly value ={{budget_item_cost.units}}></td>
                 <td><input type="number" class="form-control" min="0" name="insurance_unit_cost" value ={{budget_item_cost.unitCost}}></td>
                 <td><input type="number" class="form-control" min="0" name="insurance_total" readonly value ={{budget_item_cost.totalCost}}></td>
@@ -271,9 +276,9 @@
                 <th scope="row"></th>
                 <td>Project Management (%)</td>  
                 {% for budget_item_cost in budget_item_costs %}
-                {% if  budget_item_cost.budget_item.name == 'Project Management' %}              
-                <td><input type="number" class="form-control" min="0" name="project_m_unit"  value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="project_m_unit_cost" readonly value ={{budget_item_cost.unitCost}} hidden></td>
+                {% if  budget_item_cost.budget_item.name == 'Project Management' %}  
+                <td><input type="number" class="form-control"  name="project_m_unit_cost"  value ={% widthratio budget_item_cost.unitCost 1 100 %}></td>            
+                <td><input type="number" class="form-control" min="0" name="project_m_unit" readonly value ={{budget_item_cost.units}} hidden></td>
                 <td></td>
                 <td><input type="number" class="form-control" min="0" name="project_m_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
@@ -284,8 +289,8 @@
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Project Overhead' %} 
                 <td><input type="hidden" value={{budget_item_cost.budget_item.name}}/>{{budget_item_cost.budget_item.name}} (%)</td>
-                <td><input type="number" class="form-control" min="0" name="project_o_unit" readonly value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="project_o_unit_cost" readonly value ={{budget_item_cost.unitCost}} hidden></td>
+                <td><input type="number" class="form-control" name="project_o_unit_cost"  value ={% widthratio budget_item_cost.unitCost 1 100 %} ></td>
+                <td><input type="number" class="form-control" min="0" name="project_o_unit" readonly value ={{budget_item_cost.units}} hidden></td>
                 <td></td>
                 <td><input type="number" class="form-control" min="0" name="project_o_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
@@ -365,6 +370,35 @@
     });
 
 
+
+      $(document).on('change', "#check_int_support", function (e) {
+        $('#row_int_support').hide();
+        //put the values of the inputs to zero 
+        $("[name='international_unit']").val(0);
+  
+        $("[name='international_unit_cost']").val(0);
+     
+        prompt("Check check !!");
+        unit = $("[name='international_unit']").val();
+        cost = $("[name='international_unit']").val();
+
+        console.log("Unit value "+unit+ " Cost "+ cost);
+      });
+     
+     
+    });
+
+   function checkChanged(){
+    // $("#check_int_support").live("click", function(){
+    //     var id = parseInt($(this).val(), 10);
+    //     if($(this).is(":checked")) {
+    //         // checkbox is checked -> do something
+    //         prompt("Check check !!")
+    //     } else {
+    //         // checkbox is not checked -> do something different
+    //     }}
+    //     );
+   }
   </script>
   {% endblock javascript %}
 </body>

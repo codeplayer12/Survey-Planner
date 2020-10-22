@@ -246,6 +246,25 @@
       $(document).ready(function() {
           $('.js-example-basic-single').select2();
           $('select_currency').select2({placeholder: "Select a currency"});
+
+          //Make the settings when the page initially loads
+          if($("#drone").find("option:selected").text()=='Custom'){
+            $('#flightTime').prop( "disabled", false);
+            $('#cruiseSpeed').prop( "disabled", false);
+          }else{   
+          //Disable
+            $('#flightTime').prop( "disabled", true);
+            $('#cruiseSpeed').prop( "disabled", true);
+          }
+
+          if($("#survey_select").find("option:selected").text()=='Custom'){
+            $('#forward').prop( "disabled", false);
+            $('#lateral').prop( "disabled", false);
+          }else{   
+          //Disable to get values from the database
+            $('#forward').prop( "disabled", true);
+            $('#lateral').prop( "disabled", true);
+        }
       });
 
 
@@ -254,7 +273,6 @@
         if($(this).find("option:selected").text()=='Custom'){
           $('#flightTime').prop( "disabled", false);
           $('#cruiseSpeed').prop( "disabled", false);
-
         }else{   
           //Disable
           $('#flightTime').prop( "disabled", true);
@@ -339,7 +357,7 @@
         });
       });
 
-     $(document).on('change keyup', "form", function(e){
+     $(document).on('change focusout', "form", function(e){
        e.preventDefault();
        $(this).closest('.test').submit();
      })
