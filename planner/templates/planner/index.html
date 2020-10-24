@@ -228,7 +228,7 @@
             </div>
           </div>
           <hr class="mb-4">
-          <button class="btn btn-primary btn-lg btn-block" type="submit">Calculate mission estimates</button>
+          <!-- <button class="btn btn-primary btn-lg btn-block" type="submit">Calculate mission estimates</button> -->
         </form>
       </div>
     
@@ -311,6 +311,7 @@
           $('#forward').prop( "disabled", true);
           $('#lateral').prop( "disabled", true);
         let value = $(this).val();
+        console.log(value);
         var data = { value };
         var settings = {
           "url": "{% url 'survey' %}",
@@ -332,7 +333,7 @@
 
       $(document).on('change', "#select_currency", function (e) {
         var value = $(this).val();
-        console.log(value);
+        
         var data = {
            'app_id':'006d11f8806e416cae444672c0bcadb3'
         };
@@ -357,10 +358,22 @@
         });
       });
 
+<<<<<<< HEAD
      $(document).on('change focusout', "form", function(e){
        e.preventDefault();
        $(this).closest('.test').submit();
      })
+=======
+       $.ajax({
+         type: 'POST',
+         url:"{% url 'index' %}",
+         data: data,
+         success: function(response){
+          location.reload();
+         }
+       })
+     });
+>>>>>>> master
     });
     
 
