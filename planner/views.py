@@ -75,6 +75,8 @@ def index(request):
             )
 
         else:
+            # If there is a post because of new values posted by the user
+            # We return JSON so that it can be handled well by javascript
             drone_id = request.POST["drone"]
             camera_id = request.POST["camera"]
             survey_type_id = request.POST["survey_select"]
@@ -164,23 +166,29 @@ def index(request):
             select_camera = cameras.get(id=camera_id)
             budget_estimate = BudgetEstimate.objects.get(name='Total')
             # print("New Budget "+budget_estimate)
-            return render(
-                request,
-                "planner/index.html",
-                {
-                    "planner_values": planner_values,
-                    "cameras": cameras,
-                    "drones": drones,
-                    "surveys": surveys,
-                    "select_drone": select_drone,
-                    "select_survey": select_survey,
-                    "select_camera": select_camera,
-                    "budget_estimate": budget_estimate,
-                    "area_units": area_units,
-                    "currencies":currencies
-                },
-            )       
+            # return render(
+            #     request,
+            #     "planner/index.html",
+            #     {
+            #         "planner_values": planner_values,
+            #         "cameras": cameras,
+            #         "drones": drones,
+            #         "surveys": surveys,
+            #         "select_drone": select_drone,
+            #         "select_survey": select_survey,
+            #         "select_camera": select_camera,
+            #         "budget_estimate": budget_estimate,
+            #         "area_units": area_units,
+            #         "currencies":currencies
+            #     },
+            # )
 
+            data = {
+                    "planner_values": planner_values,                   
+                    "budget_estimate": budget_estimate.cost
+                    }
+            return JsonResponse({"data": data}, status=200)       
+    #If the method is a GET method, when the page is first hit
     cameras = Camera.objects.all()
     drones = Drone.objects.all()
     surveys = SurveyType.objects.all()
