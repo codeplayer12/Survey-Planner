@@ -2,15 +2,32 @@
 
 <head>
   <title>Planner | Home</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-  <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js">
-  <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js">
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-  
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">  
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> 
 </head>
 
 <body class="bg-light">
+  <div class="modal fade" tabindex="-1" role="dialog" id="progressModal" aria-labelledby="progressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Processing</h5>          
+        </div>
+        <div class="modal-body">
+          <div class="text-center" id="loader">
+            <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem; z-index: 20;" role="status">
+              <span class="sr-only">Processing ....</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">         
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div class="container">
+    
     {% load static %}
       <a href="https://werobotics.org/'" target="_blank"><img src="{% static "We_Robotics.png" %}" class="rounded float-left" alt="Left"></a>
       <a href="https://flyinglabs.org/namibia/" target="_blank"><img src="{% static "namibia.png" %}" class="rounded float-right" alt="right"></a>
@@ -40,27 +57,27 @@
               <h6 class="my-0">Duration of the mission </h6>
               <small class="text-muted">in Day(s) with 4 flights per day</small>
             </div>
-            <span class="text-muted">{{ planner_values.duration_mission }}</span>
+            <span class="text-muted" id="duration_mission">{{ planner_values.duration_mission }}</span>
           </li>
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
               <h6 class="my-0">Orthophoto resolution </h6>
               <small class="text-muted">(cm/pixel)</small>
             </div>
-            <span class="text-muted">{{ planner_values.ortho_reso }}</span>
+            <span class="text-muted" id="ortho_reso">{{ planner_values.ortho_reso }}</span>
           </li>
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
               <h6 class="my-0">DSM resolution</h6>
               <small class="text-muted">(cm/pixel)</small>
             </div>
-            <span class="text-muted">{{ planner_values.dsm_reso }}</span>
+            <span class="text-muted" id="dsm_reso">{{ planner_values.dsm_reso }}</span>
           </li>
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
               <h6 class="my-0">Total number of images captured</h6>
             </div>
-            <span class="text-muted" >{{ planner_values.num_images_captured }}</span>
+            <span class="text-muted" id="num_images_captured">{{ planner_values.num_images_captured }}</span>
             <input type="number" id="images_captured" name="images_captured" value="{{ planner_values.num_images_captured }}" hidden> 
           </li>
         </ul>
@@ -73,14 +90,14 @@
               <h6 class="my-0">Total size of digital files </h6>
               <small class="text-muted">(GB)</small>
             </div>
-            <span class="text-muted">{{ planner_values.total_digital_files }}</span>
+            <span class="text-muted" id="total_digital_files">{{ planner_values.total_digital_files }}</span>
           </li>
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
               <h6 class="my-0">Number of gigapixel</h6>
               <small class="text-muted">(Gigapixel)</small>
             </div>
-            <span class="text-muted">{{ planner_values.num_gigapixel }}</span>
+            <span class="text-muted" id="num_gigapixel">{{ planner_values.num_gigapixel }}</span>
           </li>
         </ul>
         <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -114,9 +131,8 @@
        
       
       </div>
-      <!-- <div class="modal-show">Calculating</div> -->
       <div class="col-md-8 order-md-1">
-        <form class="card p-2 test" >{% csrf_token %} 
+        <form action="{% url 'index'%}" class="card p-2 test" method="POST"> {% csrf_token %}
           <h3 class="mb-3 text-muted">Drone Type</h3>
           <div class="form-group row">
             <label for="lastName" class="col-sm-6 col-form-label">Drone model</label>
@@ -231,6 +247,7 @@
           <hr class="mb-4">
           <!-- <button class="btn btn-primary btn-lg btn-block" type="submit">Calculate mission estimates</button> -->
         </form>
+        
       </div>
     
     </div>
@@ -238,15 +255,43 @@
     <footer class="text-center py-2">
       <p>EZ Survey <a href="/credit" >credits</a></p>
       </footer>
+    
   </div>
   {% block javascript %}
   <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
   <script>
     $(function () {
       $(document).ready(function() {
           $('.js-example-basic-single').select2();
           $('select_currency').select2({placeholder: "Select a currency"});
+
+          $('#progressModal').modal({
+              backdrop: 'static',
+              keyboard: false,
+              show: false
+          });
+
+          //Make the settings when the page initially loads
+          if($("#drone").find("option:selected").text()=='Custom'){
+            $('#flightTime').prop( "disabled", false);
+            $('#cruiseSpeed').prop( "disabled", false);
+          }else{   
+          //Disable
+            $('#flightTime').prop( "disabled", true);
+            $('#cruiseSpeed').prop( "disabled", true);
+          }
+
+          if($("#survey_select").find("option:selected").text()=='Custom'){
+            $('#forward').prop( "disabled", false);
+            $('#lateral').prop( "disabled", false);
+          }else{   
+          //Disable to get values from the database
+            $('#forward').prop( "disabled", true);
+            $('#lateral').prop( "disabled", true);
+        }
       });
 
 
@@ -255,7 +300,6 @@
         if($(this).find("option:selected").text()=='Custom'){
           $('#flightTime').prop( "disabled", false);
           $('#cruiseSpeed').prop( "disabled", false);
-
         }else{   
           //Disable
           $('#flightTime').prop( "disabled", true);
@@ -341,24 +385,38 @@
         });
       });
       
-      
-
-
-     $('.test').on('change focusout',function (e){
+      $('.test').on('change focusout',function (e){
        var data = $(this).serialize();
-
        $.ajax({
          type: 'POST',
          url:"{% url 'index' %}",
          data: data,
+         beforeSend: function(){
+            $('#progressModal').modal("show");
+         },
          success: function(response){
-          location.reload();
+          // location.reload();
+          console.log(response);
+          plannerValues = response.data.planner_values;
+          $('#budget_estimate').text(response.data.budget_estimate);
+          $('#num_flights').text(plannerValues.num_of_flights);
+          $('#dsm_reso').text(plannerValues.dsm_reso);
+          $('#duration_mission').text(plannerValues.duration_mission);
+          $('#num_gigapixel').text(plannerValues.num_gigapixel);
+          $('#num_images_captured').text(plannerValues.num_images_captured);
+          $('#ortho_reso').text(plannerValues.ortho_reso);
+          $('#total_digital_files').text(plannerValues.total_digital_files);          
+
+         },
+         complete:function(data){
+          $('#progressModal').modal("hide");
          }
        })
      });
     });
     
 
-  </script>
+  </script> 
   {% endblock javascript %}
+  
 </body>

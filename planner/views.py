@@ -75,6 +75,8 @@ def index(request):
             )
 
         else:
+            # If there is a post because of new values posted by the user
+            # We return JSON so that it can be handled well by javascript
             drone_id = request.POST["drone"]
             camera_id = request.POST["camera"]
             survey_type_id = request.POST["survey_select"]
@@ -94,8 +96,9 @@ def index(request):
                 print(flight_time)  
                 print('*****')  
                 cruise_speed = float(request.POST["cruise_speed"])
+                print("Received values are flight time "+str(flight_time)+ " cruise speed "+str(cruise_speed))
                 # Save the new custom values to the database so that they can be sent back correctly to the UI
-                custom_drone = Drone.objects.get(pk=selected_drone.id)
+                custom_drone = Drone.objects.get(name='Custom')
                 custom_drone.cruiseSpeed = cruise_speed
                 custom_drone.flightTime = flight_time
                 custom_drone.save()
@@ -111,7 +114,10 @@ def index(request):
                 forward = float(request.POST["custom_forward"])
                 lateral = float(request.POST["custom_lateral"])
                 # Save the new custom values to the database so that they can be sent back correctly to the UI
-                SurveyType.objects.filter(pk=selected_survey.id).update(forward=forward, lateral=lateral)
+                modifiedSurvey =  SurveyType.objects.get(name='Custom')
+                modifiedSurvey.forward=forward
+                modifiedSurvey.lateral=lateral
+                modifiedSurvey.save()
                 # custom_survey.forward = forward
                 # custom_survey.lateral = lateral
                 # custom_survey.save()
@@ -160,23 +166,29 @@ def index(request):
             select_camera = cameras.get(id=camera_id)
             budget_estimate = BudgetEstimate.objects.get(name='Total')
             # print("New Budget "+budget_estimate)
-            return render(
-                request,
-                "planner/index.html",
-                {
-                    "planner_values": planner_values,
-                    "cameras": cameras,
-                    "drones": drones,
-                    "surveys": surveys,
-                    "select_drone": select_drone,
-                    "select_survey": select_survey,
-                    "select_camera": select_camera,
-                    "budget_estimate": budget_estimate,
-                    "area_units": area_units,
-                    "currencies":currencies
-                },
-            )       
+            # return render(
+            #     request,
+            #     "planner/index.html",
+            #     {
+            #         "planner_values": planner_values,
+            #         "cameras": cameras,
+            #         "drones": drones,
+            #         "surveys": surveys,
+            #         "select_drone": select_drone,
+            #         "select_survey": select_survey,
+            #         "select_camera": select_camera,
+            #         "budget_estimate": budget_estimate,
+            #         "area_units": area_units,
+            #         "currencies":currencies
+            #     },
+            # )
 
+            data = {
+                    "planner_values": planner_values,                   
+                    "budget_estimate": budget_estimate.cost
+                    }
+            return JsonResponse({"data": data}, status=200)       
+    #If the method is a GET method, when the page is first hit
     cameras = Camera.objects.all()
     drones = Drone.objects.all()
     surveys = SurveyType.objects.all()
@@ -539,11 +551,14 @@ def budget_adjustment(request):
         # # Project Management 10%
         # project_m_unit = request.POST["project_m_unit"]
         project_m_unit_cost = request.POST["project_m_unit_cost"]
+        # convert to percentage before calculation
+        project_m_unit_cost = float(project_m_unit_cost)/100
         projectmanagement_per = Calculations.sum(float(project_m_unit_cost),float(sub_total))
 
         project_management_budget_item = BudgetItem.objects.get(name='Project Management')
         project_management_cost = BudgetItemCost.objects.filter(budget_item=project_management_budget_item)[0]
         project_management_cost.totalCost = projectmanagement_per
+        project_management_cost.unitCost = project_m_unit_cost
         project_management_cost.save()
         print("10% of subtotal Project Management")
         print(Calculations.sum(float(project_m_unit_cost),float(sub_total)))
@@ -551,13 +566,15 @@ def budget_adjustment(request):
         # # Project Overhead 15%
         # project_o_unit = request.POST["project_o_unit"]
         project_o_unit_cost = request.POST["project_o_unit_cost"]
-        project_overhead_per=Calculations.sum(float(project_o_unit_cost),float(sub_total))
+        project_o_unit_cost = float(project_o_unit_cost)/100
+        project_overhead_per = Calculations.sum(float(project_o_unit_cost),float(sub_total))
 
         # Calculations.sum(float(insurance_unit),float(insurance_unit_cost))
 
         project_overhead_budget_item = BudgetItem.objects.get(name='Project Overhead')
         project_overhead_cost = BudgetItemCost.objects.filter(budget_item=project_overhead_budget_item)[0]
         project_overhead_cost.totalCost = project_overhead_per
+        project_management_cost.unitCost = project_o_unit_cost
         project_overhead_cost.save()
         print("5% of subtotal Project Overhead")
         print(Calculations.sum(float(project_o_unit_cost),float(sub_total)))
@@ -583,19 +600,26 @@ def budget_adjustment(request):
         calc = BudgetCalculations(1,1)
         print(calc)
         calc.get_total_cost()
-        budget_item_costs = BudgetItemCost.objects.all()
-        department_costs = DepartmentCost.objects.all()
+        budget_item_costs = BudgetItemCost.objects.all().values('budget_item__name', 'days', 'id', 'totalCost', 'unitCost', 'units')
+        department_costs = DepartmentCost.objects.all().values('id', 'department__name', 'total_Cost')
         budget_estimate = BudgetEstimate.objects.get(name='Total')
         budget_sub_total = BudgetEstimate.objects.get(name='SubTotal')      
         
 
-        return render(request, "planner/budget.html"
-        ,{
-            "budget_item_costs": budget_item_costs,
-            "department_costs":department_costs,
-            "budget_estimate": budget_estimate,
-            "budget_sub_total":budget_sub_total              
-        },)
+        # return render(request, "planner/budget.html"
+        # ,{
+        #     "budget_item_costs": budget_item_costs,
+        #     "department_costs":department_costs,
+        #     "budget_estimate": budget_estimate,
+        #     "budget_sub_total":budget_sub_total              
+        # },)
+        data = {
+                    "budget_item_costs": list(budget_item_costs),
+                    "department_costs":list(department_costs),
+                    "budget_estimate": budget_estimate.cost,
+                    "budget_sub_total":budget_sub_total.cost 
+                }
+        return JsonResponse({"data": data}, status=200)  
     else:
         budget_item_costs = BudgetItemCost.objects.all()
         department_costs = DepartmentCost.objects.all()
@@ -613,187 +637,5 @@ def get_default_values(request):
     pass
 
 def credits(request):
-    # Add values to the database
-    # currencies =  {
-    # "AED": "United Arab Emirates Dirham",
-    # "AFN": "Afghan Afghani",
-    # "ALL": "Albanian Lek",
-    # "AMD": "Armenian Dram",
-    # "ANG": "Netherlands Antillean Guilder",
-    # "AOA": "Angolan Kwanza",
-    # "ARS": "Argentine Peso",
-    # "AUD": "Australian Dollar",
-    # "AWG": "Aruban Florin",
-    # "AZN": "Azerbaijani Manat",
-    # "BAM": "Bosnia-Herzegovina Convertible Mark",
-    # "BBD": "Barbadian Dollar",
-    # "BDT": "Bangladeshi Taka",
-    # "BGN": "Bulgarian Lev",
-    # "BHD": "Bahraini Dinar",
-    # "BIF": "Burundian Franc",
-    # "BMD": "Bermudan Dollar",
-    # "BND": "Brunei Dollar",
-    # "BOB": "Bolivian Boliviano",
-    # "BRL": "Brazilian Real",
-    # "BSD": "Bahamian Dollar",
-    # "BTC": "Bitcoin",
-    # "BTN": "Bhutanese Ngultrum",
-    # "BWP": "Botswanan Pula",
-    # "BYN": "Belarusian Ruble",
-    # "BZD": "Belize Dollar",
-    # "CAD": "Canadian Dollar",
-    # "CDF": "Congolese Franc",
-    # "CHF": "Swiss Franc",
-    # "CLF": "Chilean Unit of Account (UF)",
-    # "CLP": "Chilean Peso",
-    # "CNH": "Chinese Yuan (Offshore)",
-    # "CNY": "Chinese Yuan",
-    # "COP": "Colombian Peso",
-    # "CRC": "Costa Rican Colón",
-    # "CUC": "Cuban Convertible Peso",
-    # "CUP": "Cuban Peso",
-    # "CVE": "Cape Verdean Escudo",
-    # "CZK": "Czech Republic Koruna",
-    # "DJF": "Djiboutian Franc",
-    # "DKK": "Danish Krone",
-    # "DOP": "Dominican Peso",
-    # "DZD": "Algerian Dinar",
-    # "EGP": "Egyptian Pound",
-    # "ERN": "Eritrean Nakfa",
-    # "ETB": "Ethiopian Birr",
-    # "EUR": "Euro",
-    # "FJD": "Fijian Dollar",
-    # "FKP": "Falkland Islands Pound",
-    # "GBP": "British Pound Sterling",
-    # "GEL": "Georgian Lari",
-    # "GGP": "Guernsey Pound",
-    # "GHS": "Ghanaian Cedi",
-    # "GIP": "Gibraltar Pound",
-    # "GMD": "Gambian Dalasi",
-    # "GNF": "Guinean Franc",
-    # "GTQ": "Guatemalan Quetzal",
-    # "GYD": "Guyanaese Dollar",
-    # "HKD": "Hong Kong Dollar",
-    # "HNL": "Honduran Lempira",
-    # "HRK": "Croatian Kuna",
-    # "HTG": "Haitian Gourde",
-    # "HUF": "Hungarian Forint",
-    # "IDR": "Indonesian Rupiah",
-    # "ILS": "Israeli New Sheqel",
-    # "IMP": "Manx pound",
-    # "INR": "Indian Rupee",
-    # "IQD": "Iraqi Dinar",
-    # "IRR": "Iranian Rial",
-    # "ISK": "Icelandic Króna",
-    # "JEP": "Jersey Pound",
-    # "JMD": "Jamaican Dollar",
-    # "JOD": "Jordanian Dinar",
-    # "JPY": "Japanese Yen",
-    # "KES": "Kenyan Shilling",
-    # "KGS": "Kyrgystani Som",
-    # "KHR": "Cambodian Riel",
-    # "KMF": "Comorian Franc",
-    # "KPW": "North Korean Won",
-    # "KRW": "South Korean Won",
-    # "KWD": "Kuwaiti Dinar",
-    # "KYD": "Cayman Islands Dollar",
-    # "KZT": "Kazakhstani Tenge",
-    # "LAK": "Laotian Kip",
-    # "LBP": "Lebanese Pound",
-    # "LKR": "Sri Lankan Rupee",
-    # "LRD": "Liberian Dollar",
-    # "LSL": "Lesotho Loti",
-    # "LYD": "Libyan Dinar",
-    # "MAD": "Moroccan Dirham",
-    # "MDL": "Moldovan Leu",
-    # "MGA": "Malagasy Ariary",
-    # "MKD": "Macedonian Denar",
-    # "MMK": "Myanma Kyat",
-    # "MNT": "Mongolian Tugrik",
-    # "MOP": "Macanese Pataca",
-    # "MRO": "Mauritanian Ouguiya (pre-2018)",
-    # "MRU": "Mauritanian Ouguiya",
-    # "MUR": "Mauritian Rupee",
-    # "MVR": "Maldivian Rufiyaa",
-    # "MWK": "Malawian Kwacha",
-    # "MXN": "Mexican Peso",
-    # "MYR": "Malaysian Ringgit",
-    # "MZN": "Mozambican Metical",
-    # "NAD": "Namibian Dollar",
-    # "NGN": "Nigerian Naira",
-    # "NIO": "Nicaraguan Córdoba",
-    # "NOK": "Norwegian Krone",
-    # "NPR": "Nepalese Rupee",
-    # "NZD": "New Zealand Dollar",
-    # "OMR": "Omani Rial",
-    # "PAB": "Panamanian Balboa",
-    # "PEN": "Peruvian Nuevo Sol",
-    # "PGK": "Papua New Guinean Kina",
-    # "PHP": "Philippine Peso",
-    # "PKR": "Pakistani Rupee",
-    # "PLN": "Polish Zloty",
-    # "PYG": "Paraguayan Guarani",
-    # "QAR": "Qatari Rial",
-    # "RON": "Romanian Leu",
-    # "RSD": "Serbian Dinar",
-    # "RUB": "Russian Ruble",
-    # "RWF": "Rwandan Franc",
-    # "SAR": "Saudi Riyal",
-    # "SBD": "Solomon Islands Dollar",
-    # "SCR": "Seychellois Rupee",
-    # "SDG": "Sudanese Pound",
-    # "SEK": "Swedish Krona",
-    # "SGD": "Singapore Dollar",
-    # "SHP": "Saint Helena Pound",
-    # "SLL": "Sierra Leonean Leone",
-    # "SOS": "Somali Shilling",
-    # "SRD": "Surinamese Dollar",
-    # "SSP": "South Sudanese Pound",
-    # "STD": "São Tomé and Príncipe Dobra (pre-2018)",
-    # "STN": "São Tomé and Príncipe Dobra",
-    # "SVC": "Salvadoran Colón",
-    # "SYP": "Syrian Pound",
-    # "SZL": "Swazi Lilangeni",
-    # "THB": "Thai Baht",
-    # "TJS": "Tajikistani Somoni",
-    # "TMT": "Turkmenistani Manat",
-    # "TND": "Tunisian Dinar",
-    # "TOP": "Tongan Pa'anga",
-    # "TRY": "Turkish Lira",
-    # "TTD": "Trinidad and Tobago Dollar",
-    # "TWD": "New Taiwan Dollar",
-    # "TZS": "Tanzanian Shilling",
-    # "UAH": "Ukrainian Hryvnia",
-    # "UGX": "Ugandan Shilling",
-    # "USD": "United States Dollar",
-    # "UYU": "Uruguayan Peso",
-    # "UZS": "Uzbekistan Som",
-    # "VEF": "Venezuelan Bolívar Fuerte (Old)",
-    # "VES": "Venezuelan Bolívar Soberano",
-    # "VND": "Vietnamese Dong",
-    # "VUV": "Vanuatu Vatu",
-    # "WST": "Samoan Tala",
-    # "XAF": "CFA Franc BEAC",
-    # "XAG": "Silver Ounce",
-    # "XAU": "Gold Ounce",
-    # "XCD": "East Caribbean Dollar",
-    # "XDR": "Special Drawing Rights",
-    # "XOF": "CFA Franc BCEAO",
-    # "XPD": "Palladium Ounce",
-    # "XPF": "CFP Franc",
-    # "XPT": "Platinum Ounce",
-    # "YER": "Yemeni Rial",
-    # "ZAR": "South African Rand",
-    # "ZMW": "Zambian Kwacha",
-    # "ZWL": "Zimbabwean Dollar"}
-
-    # # json_dictionary = json.loads(currencies)
-
-    # for key in currencies:
-    #     currency = Currency()
-    #     currency.ticker =  key
-    #     currency.name = currencies[key]
-    #     currency.save()
-
     return render(request, 'planner/credits.html')
 
