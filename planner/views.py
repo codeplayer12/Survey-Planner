@@ -600,19 +600,26 @@ def budget_adjustment(request):
         calc = BudgetCalculations(1,1)
         print(calc)
         calc.get_total_cost()
-        budget_item_costs = BudgetItemCost.objects.all()
-        department_costs = DepartmentCost.objects.all()
+        budget_item_costs = BudgetItemCost.objects.all().values('budget_item__name', 'days', 'id', 'totalCost', 'unitCost', 'units')
+        department_costs = DepartmentCost.objects.all().values('id', 'department__name', 'total_Cost')
         budget_estimate = BudgetEstimate.objects.get(name='Total')
         budget_sub_total = BudgetEstimate.objects.get(name='SubTotal')      
         
 
-        return render(request, "planner/budget.html"
-        ,{
-            "budget_item_costs": budget_item_costs,
-            "department_costs":department_costs,
-            "budget_estimate": budget_estimate,
-            "budget_sub_total":budget_sub_total              
-        },)
+        # return render(request, "planner/budget.html"
+        # ,{
+        #     "budget_item_costs": budget_item_costs,
+        #     "department_costs":department_costs,
+        #     "budget_estimate": budget_estimate,
+        #     "budget_sub_total":budget_sub_total              
+        # },)
+        data = {
+                    "budget_item_costs": list(budget_item_costs),
+                    "department_costs":list(department_costs),
+                    "budget_estimate": budget_estimate.cost,
+                    "budget_sub_total":budget_sub_total.cost 
+                }
+        return JsonResponse({"data": data}, status=200)  
     else:
         budget_item_costs = BudgetItemCost.objects.all()
         department_costs = DepartmentCost.objects.all()
