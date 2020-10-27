@@ -2,16 +2,31 @@
 
 <head>
   <title>Planner | Budget</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-  <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js">
-  <link rel="text/javascript" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">  
 </head>
 
 <body class="bg-light">
-  <div class="container">
+  <div class="modal fade" tabindex="-1" role="dialog" id="progressModal" aria-labelledby="progressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Processing</h5>          
+        </div>
+        <div class="modal-body">
+          <div class="text-center" id="loader">
+            <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem; z-index: 20;" role="status">
+              <span class="sr-only">Processing ....</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">         
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">    
     <div class="py-5 text-center">
-      <h2>Budget Calculator {{cost}} </h2>
-           
+      <h2>Budget Calculator {{cost}} </h2>           
     </div>
     <div class="row"> 
       <div class="col-md-10 order-md-1">
@@ -320,56 +335,17 @@
   </div>
   {% block javascript %}
   <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
   <script>
     $(function () {
-      $(document).on('change', "#drone", function (e) {
-        let value = $(this).val();
-        var data = { value };
-        var settings = {
-          "url": "{% url 'drone' %}",
-          "method": "GET",
-          "timeout": 0,
-          "headers": {
-            "Content-Type": "application/json"
-          },
-          "data": data,
-        };
-        $.ajax(settings).done(function (response) {
-          console.log(response);
-          drone = response.data;
-          $('#flightTime').val(drone.flight_time);
-          $('#cruiseSpeed').val(drone.cruise_speed);
-        });
+      $(document).ready(function() {          
+          $('#progressModal').modal({
+              backdrop: 'static',
+              keyboard: false,
+              show: false
+          });
       });
-
-
-      $(document).on('change', "#survey_select", function (e) {
-        let value = $(this).val();
-        var data = { value };
-        var settings = {
-          "url": "{% url 'survey' %}",
-          "method": "GET",
-          "timeout": 0,
-          "headers": {
-            "Content-Type": "application/json"
-          },
-          "data": data,
-        };
-        $.ajax(settings).done(function (response) {
-          console.log(response);
-          survey = response.data;
-          $('#forward').val(survey.forward);
-          $('#lateral').val(survey.lateral);
-        });
-      });
-
-      $(document).on('change keyup', ".test", function(e){
-        e.preventDefault();
-        $(this).closest('.test').submit();
-      });
-   
-
-
 
       $(document).on('change', "#check_int_support", function (e) {
         $('#row_int_support').hide();
@@ -378,15 +354,34 @@
   
         $("[name='international_unit_cost']").val(0);
      
-        prompt("Check check !!");
+        // prompt("Check check !!");
         unit = $("[name='international_unit']").val();
         cost = $("[name='international_unit']").val();
 
         console.log("Unit value "+unit+ " Cost "+ cost);
       });
-     
-     
     });
+
+    $('.test').on('change focusout',function (e){
+        e.preventDefault();
+        var data = $(this).serialize(); 
+        $.ajax({
+          type: 'POST',
+          url:"{% url 'budget_adjustment' %}",
+          data: data,
+          beforeSend: function(){
+            $('#progressModal').modal("show");
+         },
+          success: function(response){
+           location.reload();
+          },
+         complete:function(data){
+          $('#progressModal').modal("hide");
+         }
+        })      
+    });
+   
+   
 
   //  function checkChanged(){
   //   // $("#check_int_support").live("click", function(){
