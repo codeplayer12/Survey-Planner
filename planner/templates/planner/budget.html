@@ -67,16 +67,16 @@
                 <th scope="row">
                   <div>
                     <label for="check_int_support">Disable</label> <br>
-                    <input type="checkbox" id="check_int_support" name="check_int_support" onchange="checkChanged()">
+                    <input type="checkbox" id="check_int_support" name="check_int_support">
                   </div>
                 </th>
                 <td>International Support</td>
                 {% for budget_item_cost in budget_item_costs %}
                     {% if  budget_item_cost.budget_item.name == 'International support' %}   
-                <td><input type="number" class="form-control" min="0" name="international_days" max="100"  value ={{budget_item_cost.days}} readonly></td>
-                <td><input type="number" class="form-control" min="0" name="international_unit" value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="international_unit_cost" value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="international_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="international_days" name="international_days" max="100"  value ={{budget_item_cost.days}} readonly></td>
+                <td><input type="number" class="form-control" min="0" id="international_unit" name="international_unit" value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="international_unit_cost" name="international_unit_cost" value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="international_total" name="international_total" readonly value ={{budget_item_cost.totalCost}}></td>
                   {% endif %}
                 {% endfor %} 
               </tr>
@@ -97,10 +97,10 @@
                 <td>Drone Pilots</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Drone Pilots' %}
-                <td><input type="number" class="form-control" min="0" name="drone_p_days" max="100" readonly value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" name="drone_p_unit" value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="drone_p_unit_cost" value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="drone_p_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="drone_p_days" name="drone_p_days" max="100" readonly value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" id="drone_p_unit" name="drone_p_unit" value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="drone_p_unit_cost" name="drone_p_unit_cost" value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="drone_p_total" name="drone_p_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %} 
               </tr>
@@ -109,10 +109,10 @@
                 <td>Data/GIS Specialist</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Data Gis specialist' %}
-                <td><input type="number" class="form-control" min="0" name="gis_days" max="100" readonly value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" name="gis_unit" value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="gis_unit_cost" value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="gis_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="gis_days" name="gis_days" max="100" readonly value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" id="gis_unit" name="gis_unit" value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="gis_unit_cost" name="gis_unit_cost" value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="gis_total" name="gis_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %} 
               </tr>
@@ -124,7 +124,7 @@
                 <th scope="row">Total Amount</th>
                 {% for department_cost in department_costs %}
                 {% if  department_cost.department.name == 'Human Resources' %}
-                <td><input type="number" class="form-control" min="0" name="human_r_total" readonly value="{{department_cost.total_Cost}}"></td>
+                <td><input type="number" class="form-control" min="0" id="human_r_total" name="human_r_total" readonly value="{{department_cost.total_Cost}}"></td>
                 {% endif %}
                 {% endfor %} 
               </tr>
@@ -141,10 +141,10 @@
                 <td>Drone Rental</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Drone Rental' %}
-                <td><input type="number" class="form-control" min="0" name="drone_r_days" max="100" readonly value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" name="drone_r_unit" value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="drone_r_unit_cost" readonly value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="drone_r_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="drone_r_days" name="drone_r_days" max="100" readonly value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" id="drone_r_unit" name="drone_r_unit" value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="drone_r_unit_cost" name="drone_r_unit_cost" readonly value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="drone_r_total" name="drone_r_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %} 
               </tr>
@@ -153,10 +153,10 @@
                 <td>Laptop Rental</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Laptop Rental' %}
-                <td><input type="number" class="form-control" min="0" name="laptop_r_days" max="100" readonly value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" name="laptop_r_unit_cost" value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="laptop_r_unit" readonly value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="laptop_r_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="laptop_r_days" name="laptop_r_days" max="100" readonly value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" id="laptop_r_unit_cost" name="laptop_r_unit_cost" value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="laptop_r_unit" name="laptop_r_unit" readonly value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="laptop_r_total" name="laptop_r_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %} 
               </tr>
@@ -166,9 +166,9 @@
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Software Rental' %}
                 <td></td>
-                <td><input type="number" class="form-control" min="0" name="software_r_unit" value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="software_r_unit_cost" value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="software_r_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="software_r_unit" name="software_r_unit" value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="software_r_unit_cost" name="software_r_unit_cost" value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="software_r_total" name="software_r_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %} 
               </tr>              
@@ -180,7 +180,7 @@
                 <th scope="row">Total Amount</th>
                 {% for department_cost in department_costs %}
                 {% if  department_cost.department.name == 'Technology' %}
-                <td><input type="number" class="form-control" min="0" name="tech_r_total" readonly value="{{department_cost.total_Cost}}"></td>
+                <td><input type="number" class="form-control" min="0" id="tech_r_total" name="tech_r_total" readonly value="{{department_cost.total_Cost}}"></td>
                 {% endif %}
                 {% endfor %} 
               </tr>
@@ -197,10 +197,10 @@
                 <td>Organize flight permissions</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Organize flight permissions' %}
-                <td><input type="number" class="form-control" min="0" name="flight_days" max="100" value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" name="flight_unit" value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="flight_unit_cost" value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="flight_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="flight_days" name="flight_days" max="100" value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" id="flight_unit" name="flight_unit" value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="flight_unit_cost" name="flight_unit_cost" value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="flight_total" name="flight_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %}
               </tr>
@@ -209,10 +209,10 @@
                 <td>Local travel</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Local Travel' %}
-                <td><input type="number" class="form-control" min="0" name="travel_days" max="100" readonly value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" name="travel_unit" readonly value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="travel_unit_cost" value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="travel_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="travel_days" name="travel_days" max="100" readonly value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" id="travel_unit" name="travel_unit" readonly value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="travel_unit_cost" name="travel_unit_cost" value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="travel_total" name="travel_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %}
               </tr>
@@ -221,10 +221,10 @@
                 <td>Local accomodation and per diem</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Local accomodation and per diem' %}
-                <td><input type="number" class="form-control" min="0" name="accodomation_days" max="100" readonly value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" name="accodomation_unit" readonly value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="accodomation_unit_cost" value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="accodomation_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="accodomation_days"  name="accodomation_days" max="100" readonly value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" id="accodomation_unit" name="accodomation_unit" readonly value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="accodomation_unit_cost" name="accodomation_unit_cost" value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="accodomation_total" name="accodomation_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %}
               </tr>
@@ -233,10 +233,10 @@
                 <td>Community engagement</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Community engagement' %}
-                <td><input type="number" class="form-control" min="0" name="community_days" max="100" value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" name="community_unit" value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="community_unit_cost" value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="community_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="community_days" name="community_days" max="100" value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" id="community_unit" name="community_unit" value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="community_unit_cost" name="community_unit_cost" value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="community_total" name="community_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %}
               </tr>              
@@ -248,7 +248,7 @@
                 <th scope="row">Total Amount</th>
                 {% for department_cost in department_costs %}
                 {% if  department_cost.department.name == 'Operations' %}
-                <td><input type="number" class="form-control" min="0" name="operations_total" readonly value="{{department_cost.total_Cost}}"></td>
+                <td><input type="number" class="form-control" min="0" id="operations_total" name="operations_total" readonly value="{{department_cost.total_Cost}}"></td>
                 {% endif %}
                 {% endfor %}
               </tr>
@@ -260,10 +260,10 @@
                 <td>Insurance</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Insurance' %}
-                <td><input type="number" class="form-control" min="0" name="insurance_days" max="100" readonly value ={{budget_item_cost.days}} hidden></td>
-                <td><input type="number" class="form-control" min="0" name="insurance_unit" readonly value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" name="insurance_unit_cost" value ={{budget_item_cost.unitCost}}></td>
-                <td><input type="number" class="form-control" min="0" name="insurance_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="insurance_days" name="insurance_days" max="100" readonly value ={{budget_item_cost.days}} hidden></td>
+                <td><input type="number" class="form-control" min="0" id="insurance_unit" name="insurance_unit" readonly value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="insurance_unit_cost" name="insurance_unit_cost" value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="insurance_total" name="insurance_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %}
               </tr>                      
@@ -275,14 +275,14 @@
                 <th scope="row">Total Amount</th>
                 {% for department_cost in department_costs %}
                 {% if  department_cost.department.name == 'Other' %}
-                <td><input type="number" class="form-control" min="0" name="other_in_total" readonly value="{{department_cost.total_Cost}}"></td>
+                <td><input type="number" class="form-control" min="0" id="other_in_total" name="other_in_total" readonly value="{{department_cost.total_Cost}}"></td>
                 {% endif %}
                 {% endfor %}
               </tr>
               <tr>
                 
                 <th colspan='5'>Sub-total</th>                
-                <td><input type="number" class="form-control" min="0" name="sub_total" value={{budget_sub_total.cost}} readonly></td>                
+                <td><input type="number" class="form-control" min="0" id="sub_total" name="sub_total" value={{budget_sub_total.cost}} readonly></td>                
               </tr>
               <tr>
                 <th colspan='6'>Other</th>
@@ -291,11 +291,11 @@
                 <th scope="row"></th>
                 <td>Project Management (%)</td>  
                 {% for budget_item_cost in budget_item_costs %}
-                {% if  budget_item_cost.budget_item.name == 'Project Management' %}  
-                <td><input type="number" class="form-control"  name="project_m_unit_cost"  value ={% widthratio budget_item_cost.unitCost 1 100 %}></td>            
-                <td><input type="number" class="form-control" min="0" name="project_m_unit" readonly value ={{budget_item_cost.units}} hidden></td>
+                {% if  budget_item_cost.budget_item.name == 'Project Management' %}                           
+                <td><input type="number" class="form-control" min="0" id="project_m_unit" name="project_m_unit" readonly value ={{budget_item_cost.units}} hidden></td>
+                <td><input type="number" class="form-control"  id="project_m_unit_cost" name="project_m_unit_cost"  value ={% widthratio budget_item_cost.unitCost 1 100 %}></td>   
                 <td></td>
-                <td><input type="number" class="form-control" min="0" name="project_m_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="project_m_total" name="project_m_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %}
               </tr>  
@@ -303,11 +303,11 @@
                 <th scope="row"></th>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Project Overhead' %} 
-                <td><input type="hidden" value={{budget_item_cost.budget_item.name}}/>{{budget_item_cost.budget_item.name}} (%)</td>
-                <td><input type="number" class="form-control" name="project_o_unit_cost"  value ={% widthratio budget_item_cost.unitCost 1 100 %} ></td>
-                <td><input type="number" class="form-control" min="0" name="project_o_unit" readonly value ={{budget_item_cost.units}} hidden></td>
+                <td><input type="hidden" value={{budget_item_cost.budget_item.name}}/>{{budget_item_cost.budget_item.name}} (%)</td>                
+                <td><input type="number" class="form-control" min="0" id="project_o_unit" name="project_o_unit" readonly value ={{budget_item_cost.units}} hidden></td>
+                <td><input type="number" class="form-control" id="project_o_unit_cost" name="project_o_unit_cost"  value ={% widthratio budget_item_cost.unitCost 1 100 %} ></td>
                 <td></td>
-                <td><input type="number" class="form-control" min="0" name="project_o_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="project_o_total" id="project_o_total" name="project_o_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %}
               </tr>                    
@@ -317,7 +317,7 @@
                 <td></td>
                 <td></td>
                 <th scope="row">Total</th>
-                      <td><input type="number" class="form-control" min="0" name="total_overal" readonly value="{{budget_estimate.cost}}"></td>
+                      <td><input type="number" class="form-control" min="0" id="total_overal" name="total_overal" readonly value="{{budget_estimate.cost}}"></td>
               </tr>
             </tbody>
           </table>
@@ -373,7 +373,17 @@
             $('#progressModal').modal("show");
          },
           success: function(response){
-           location.reload();
+          //  location.reload();
+          //  console.log(response);
+           budgetItemCosts = response.data.budget_item_costs;
+           departmentItemCosts = response.data.department_costs;
+          //  console.log(budgetItemCosts);
+           $('#total_overal').val(response.data.budget_estimate);
+           $('#sub_total').val(response.data.budget_sub_total); 
+          
+            assignBudgetItemCosts(budgetItemCosts);
+            assignDepartmentCosts(departmentItemCosts);    
+           
           },
          complete:function(data){
           $('#progressModal').modal("hide");
@@ -382,7 +392,130 @@
     });
    
    
+    function assignBudgetItemCosts(budgetItemCosts){
+      for( var i = 0; i<budgetItemCosts.length;i++){
+              // console.log(budgetItemCosts[i].budget_item__name);
+              item = budgetItemCosts[i];             
 
+              switch(item.budget_item__name){
+                case 'Ground Survey':
+                      $('#ground_days').val(item.days);
+                      $('#ground_unit').val(item.units);
+                      $('#ground_unit_cost').val(item.unitCost);
+                      $('#ground_total').val(item.totalCost);
+                      break;
+                case 'International support':   
+                      $('#international_days').val(item.days);
+                      $('#international_unit').val(item.units);
+                      $('#international_unit_cost').val(item.unitCost);
+                      $('#international_total').val(item.totalCost);
+                      break;  
+                case 'Project Manager':   
+                      $('#project_manager_days').val(item.days);
+                      $('#project_manager_unit').val(item.units);
+                      $('#project_manager_unit_cost').val(item.unitCost);
+                      $('#project_manager_total').val(item.totalCost);
+                      break;        
+                case 'Drone Pilots':   
+                      $('#drone_p_days').val(item.days);
+                      $('#drone_p_unit').val(item.units);
+                      $('#drone_p_unit_cost').val(item.unitCost);
+                      $('#drone_p_total').val(item.totalCost);
+                      break;      
+                case 'Data Gis specialist':   
+                      $('#gis_days').val(item.days);
+                      $('#gis_unit').val(item.units);
+                      $('#gis_unit_cost').val(item.unitCost);
+                      $('#gis_total').val(item.totalCost);
+                      break;          
+                case 'Drone Rental':   
+                      $('#drone_r_days').val(item.days);
+                      $('#drone_r_unit').val(item.units);
+                      $('#drone_r_unit_cost').val(item.unitCost);
+                      $('#drone_r_total').val(item.totalCost);
+                      break;  
+                case 'Laptop Rental':   
+                      $('#laptop_r_days').val(item.days);
+                      $('#laptop_r_unit').val(item.units);
+                      $('#laptop_r_unit_cost').val(item.unitCost);
+                      $('#laptop_r_total').val(item.totalCost);
+                      break;
+                case 'Software Rental':   
+                      $('#software_r_days').val(item.days);
+                      $('#software_r_unit').val(item.units);
+                      $('#software_r_unit_cost').val(item.unitCost);
+                      $('#software_r_total').val(item.totalCost);
+                      break;  
+                case 'Organize flight permissions':   
+                      $('#flight_days').val(item.days);
+                      $('#flight_unit').val(item.units);
+                      $('#flight_unit_cost').val(item.unitCost);
+                      $('#flight_total').val(item.totalCost);
+                      break;        
+                case 'Local Travel':   
+                      $('#travel_days').val(item.days);
+                      $('#travel_unit').val(item.units);
+                      $('#travel_unit_cost').val(item.unitCost);
+                      $('#travel_total').val(item.totalCost);
+                      break;
+                case 'Local accomodation and per diem':   
+                      $('#accodomation_days').val(item.days);
+                      $('#accodomation_unit').val(item.units);
+                      $('#accodomation_unit_cost').val(item.unitCost);
+                      $('#accodomation_total').val(item.totalCost);
+                      break;  
+                case 'Community engagement':   
+                      $('#community_days').val(item.days);
+                      $('#community_unit').val(item.units);
+                      $('#community_unit_cost').val(item.unitCost);
+                      $('#community_total').val(item.totalCost);
+                      break; 
+                case 'Insurance':   
+                      $('#insurance_days').val(item.days);
+                      $('#insurance_unit').val(item.units);
+                      $('#insurance_unit_cost').val(item.unitCost);
+                      $('#insurance_total').val(item.totalCost);
+                      break;
+                case 'Project Management':   
+                      $('#project_m_unit').val(item.units);
+                      $('#project_m_unit_cost').val(item.unitCost * 100);
+                      $('#project_m_total').val(item.totalCost);
+                      break;  
+                case 'Project Overhead':   
+                      $('#project_o_unit_unit').val(item.units);
+                      $('#project_o_unit_unit_cost').val(item.unitCost);
+                      $('#project_o_unit_total').val(item.totalCost);
+                      break;          
+                      
+              }              
+               
+            }         
+    }
+
+    function assignDepartmentCosts(departmentItemCosts){
+      for( var i = 0; i<departmentItemCosts.length;i++){
+              // console.log(departmentItemCosts[i].department__name);
+              item = departmentItemCosts[i];
+
+              switch(item.budget_item__name){
+                case 'Human Resources':                      
+                      $('#human_r_total').val(item.total_Cost);
+                      break;
+                case 'Technology':                     
+                      $('#tech_r_total').val(item.total_Cost);
+                      break;
+                case 'Operations':   
+                      $('#operations_total').val(item.total_Cost);
+                      break;  
+                case 'Other':   
+                      $('#other_in_total').val(item.total_Cost);
+                      break;        
+                case 'Project':   
+                      $('#project_o_total').val(item.total_Cost);
+                      break; 
+              }
+      }     
+    }
   //  function checkChanged(){
   //   // $("#check_int_support").live("click", function(){
   //   //     var id = parseInt($(this).val(), 10);
