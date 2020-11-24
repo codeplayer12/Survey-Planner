@@ -12,8 +12,10 @@ class BudgetCalculations(object):
     def get_total_cost(self):
         departments = Department.objects.all()
         budget_estimate = 0.0
-        for department in departments:
-            budget_estimate += self.department_total_cost(department)
+        for department in departments:            
+            department_cost = self.department_total_cost(department)
+            # print("Total cost department costs" +str(department_cost))
+            budget_estimate += department_cost
         budget_estimate_updated = BudgetEstimate.objects.all()[0]   
         budget_estimate_updated.cost =  budget_estimate
         budget_estimate_updated.save()
@@ -58,7 +60,7 @@ class BudgetCalculations(object):
         d_pilots = self.round_up(number_of_flights/4, decimals=0)*1.2
         print('D pilots '+str(d_pilots))
         project_manager = self.round_up(d_pilots/3, decimals=1)
-        gis = ceil((((13/600)*total_number_of_images_captured)+((13/600)*total_number_of_images_captured)+(0.1*(13/600)*total_number_of_images_captured)/4)/24)
+        gis = ceil((((13/600)*total_number_of_images_captured +(13/600)*total_number_of_images_captured+0.1*(13/600)*total_number_of_images_captured+(13/600)*total_number_of_images_captured)/4)/24)
         drone_r =  d_pilots
         laptop_r = ground_s+d_pilots+gis
        
@@ -361,6 +363,8 @@ class Calculations(object):
         self.set_camera_details()
         self.set_survey_type_details() 
 
+        print("Area size in calculations "+str(self.area_size))
+
     def __str__(self):
         return "Camera id" +str(self.camera_id)+ "Survey id "+str(self.survey_type_id)+"Battery"+str(self.bttry_capacity)
 
@@ -431,6 +435,7 @@ class Calculations(object):
         return self.get_image_spacing_lateral()
 
     def get_num_of_lines(self):
+        print("Num of lines "+str(ceil(self.get_polygon()/self.get_line_spacing())))
         return ceil(self.get_polygon()/self.get_line_spacing())
 
     def get_turn_distance(self):
@@ -449,15 +454,18 @@ class Calculations(object):
         return sqrt(2*self.get_polygon())
 
     def get_num_photos_per_line(self):
+        print("Num photos per line " +str(ceil(self.get_polygon()/self.get_image_spacing_forward())))
         return ceil(self.get_polygon()/self.get_image_spacing_forward())
 
     def get_total_num_of_photos(self):
+        print("Total number of images "+ str(self.get_num_photos_per_line()* self.get_num_of_lines()))
         return self.get_num_photos_per_line()* self.get_num_of_lines()
 
     def get_num_of_gigapixels(self):
         return round((self.get_total_num_of_photos()* self.lat_dimension_of_sensor_px* self.fwd_dimension_of_sensor_px)/(10**9),1)
      
     def get_number_of_flights(self):
+        print("Number of flights without ceiling"+str(ceil(self.get_f_thirteen()/self.distance_travelled_per_flight)))
         return ceil(self.get_f_thirteen()/self.distance_travelled_per_flight)
 
     #Processing information sheet
