@@ -370,7 +370,7 @@
           url:"{% url 'budget_adjustment' %}",
           data: data,
           beforeSend: function(){
-            $('#progressModal').modal("show");
+            // $('#progressModal').modal("show");
          },
           success: function(response){
           //  location.reload();
@@ -386,7 +386,7 @@
            
           },
          complete:function(data){
-          $('#progressModal').modal("hide");
+          // $('#progressModal').modal("hide");
          }
         })      
     });

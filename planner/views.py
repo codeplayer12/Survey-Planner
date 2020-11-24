@@ -77,6 +77,7 @@ def index(request):
         else:
             # If there is a post because of new values posted by the user
             # We return JSON so that it can be handled well by javascript
+            print('---------HIT THE POST API METHOD HERE----------')
             drone_id = request.POST["drone"]
             camera_id = request.POST["camera"]
             survey_type_id = request.POST["survey_select"]
@@ -131,6 +132,7 @@ def index(request):
                 flight_time * 60 * cruise_speed
             ) / (1 + (bttry_capacity / 100) + flight_height * (0.01 / 12.5))
 
+            print('Area size is '+str(area_size))
             # Perform non-budget calculations
             cal = Calculations(
                 camera_id,
@@ -187,80 +189,83 @@ def index(request):
                     "planner_values": planner_values,                   
                     "budget_estimate": budget_estimate.cost
                     }
-            return JsonResponse({"data": data}, status=200)       
-    #If the method is a GET method, when the page is first hit
-    cameras = Camera.objects.all()
-    drones = Drone.objects.all()
-    surveys = SurveyType.objects.all()
-    area_units = AreaSizeAndUnit.objects.all()
-    currencies = Currency.objects.all()
+            return JsonResponse({"data": data}, status=200) 
+    else:              
+        #If the method is a GET method, when the page is first hit
+        print('---------HIT THE GET METHOD HERE----------')
+        cameras = Camera.objects.all()
+        drones = Drone.objects.all()
+        surveys = SurveyType.objects.all()
+        area_units = AreaSizeAndUnit.objects.all()
+        currencies = Currency.objects.all()
 
-    try:
-        # data = json.loads(request.body)
-        # # print(data)
-        # camera_id = data['camera_id']
-        # Load default values
-        camera_id = 15
-        drone_id = 18
-        survey_type_id = 1
-        flight_height = 80
-        bttry_capacity = 30
-        size=1
-        units='kilometres'
-        area_size = 1
-        distance_travelled_per_flight = 20988.14
-        take_of_area_distance = 0.5
-        select_survey = surveys.get(id=survey_type_id)
-        select_drone = drones.get(id=drone_id)
-        select_camera = cameras.get(id=camera_id)
+        try:
+            # data = json.loads(request.body)
+            # # print(data)
+            # camera_id = data['camera_id']
+            # Load default values
+            camera_id = 15
+            drone_id = 18
+            survey_type_id = 1
+            flight_height = 80
+            bttry_capacity = 30
+            size=1
+            units='kilometres'
+            area_size = 1
+            distance_travelled_per_flight = 20988.14
+            take_of_area_distance = 0.5
+            select_survey = surveys.get(id=survey_type_id)
+            select_drone = drones.get(id=drone_id)
+            select_camera = cameras.get(id=camera_id)
 
-        cal = Calculations(
-            camera_id,
-            survey_type_id,
-            bttry_capacity,
-            flight_height,
-            take_of_area_distance,
-            area_size,
-            distance_travelled_per_flight,
-            size,units,
-            drone_id
-        )
-        planner_values = json.loads(cal.get_planner_display_values())
+            cal = Calculations(
+                camera_id,
+                survey_type_id,
+                bttry_capacity,
+                flight_height,
+                take_of_area_distance,
+                area_size,
+                distance_travelled_per_flight,
+                size,units,
+                drone_id
+            )
+            planner_values = json.loads(cal.get_planner_display_values())
 
-        # Set budget default values
-        cal = BudgetCalculations(1, 1)
-        cal.set_defaults()
-        # cal.get_total_cost()
-        budget_estimate = BudgetEstimate.objects.filter(name='Total')[0]
-        # budget_estimate = BudgetEstimate.objects.all()[0]
-        print("Budget cost "+ str(budget_estimate.cost))
-        return render(
-            request,
-            "planner/index.html",
-            {
-                "planner_values": planner_values,
-                "cameras": cameras,
-                "drones": drones,
-                "surveys": surveys,
-                "select_drone": select_drone,
-                "select_survey": select_survey,
-                "select_camera": select_camera,
-                "budget_estimate": budget_estimate,
-                "area_units": area_units,
-                "currencies":currencies
-            },
-        )
-    except Exception as e:
-        return HttpResponse(str(e))
+            # Set budget default values
+            cal = BudgetCalculations(1, 1)
+            cal.set_defaults()
+            # cal.get_total_cost()
+            budget_estimate = BudgetEstimate.objects.filter(name='Total')[0]
+            # budget_estimate = BudgetEstimate.objects.all()[0]
+            print("Budget cost "+ str(budget_estimate.cost))
+            return render(
+                request,
+                "planner/index.html",
+                {
+                    "planner_values": planner_values,
+                    "cameras": cameras,
+                    "drones": drones,
+                    "surveys": surveys,
+                    "select_drone": select_drone,
+                    "select_survey": select_survey,
+                    "select_camera": select_camera,
+                    "budget_estimate": budget_estimate,
+                    "area_units": area_units,
+                    "currencies":currencies
+                },
+            )
+        except Exception as e:
+            return HttpResponse(str(e))
 
 
 def area_calc(area, unit):
+    print('The unit is '+unit)
     if unit == "kilometres":
         return area * 1000000
-    elif unit == "hectares":
-        return area * 100
-    elif unit == "acres":
+    elif unit == "hactares":
         return area * 10000
+    elif unit == "acres":
+        return area * 100
     else:
         return area
 

@@ -7,7 +7,7 @@
 </head>
 
 <body class="bg-light">
-  <div class="modal fade" tabindex="-1" role="dialog" id="progressModal" aria-labelledby="progressModalLabel" aria-hidden="true">
+  <!-- <div class="modal fade" tabindex="-1" role="dialog" id="progressModal" aria-labelledby="progressModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   
   <div class="container">
     
@@ -36,9 +36,14 @@
     </div>
     <div class="row">
     
-      <div class="col-md-4 order-md-2 mb-4">   
+      <div class="col-md-4 order-md-2 mb-4"> 
+        <div class="text-center" id="loader">
+          <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem; z-index: 20;" role="status">
+            <span class="sr-only">Processing ....</span>
+          </div>
+        </div>  
 
-        
+        <div id="mission-estimate-content">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-muted">Mission Estimates</span>
         </h4>
@@ -129,7 +134,7 @@
             <button type="submit" class="btn btn-secondary btn-lg btn-block">View Budget</button>
        </form>
        
-      
+      </div>
       </div>
       <div class="col-md-8 order-md-1">
         <form action="{% url 'index'%}" class="card p-2 test" method="POST"> {% csrf_token %}
@@ -238,9 +243,9 @@
             </div>
           </div>
           <div class="form-group row">
-            <label for="lastName" class="col-sm-6 col-form-label" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Distance from take-off to survey area</label>
+            <label for="lastName" class="col-sm-6 col-form-label" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Distance from take-off to survey area (km)</label>
             <div class="col-sm-6">
-              <input type="number" step="0.1" class="form-control" name="take_of_area" value="{{planner_values.take_of_area}}"
+              <input type="number" step="0.1" class="form-control" name="take_of_area" value="{% widthratio planner_values.take_of_area 1 10 %}"
                 id="take_of_area" min="0.0" required>
             </div>
           </div>
@@ -265,6 +270,7 @@
   <script>
     $(function () {
       $(document).ready(function() {
+          $('#loader').hide();
           $('.js-example-basic-single').select2();
           $('select_currency').select2({placeholder: "Select a currency"});
 
@@ -392,7 +398,9 @@
          url:"{% url 'index' %}",
          data: data,
          beforeSend: function(){
-            $('#progressModal').modal("show");
+          $('#mission-estimate-content').hide();
+          $('#loader').show();
+            // $('#progressModal').modal("show");
          },
          success: function(response){
           // location.reload();
@@ -409,7 +417,10 @@
 
          },
          complete:function(data){
-          $('#progressModal').modal("hide");
+          // $('#progressModal').modal("hide");
+          $('#loader').hide();
+          $('#mission-estimate-content').show();
+          
          }
        })
      });
