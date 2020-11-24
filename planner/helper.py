@@ -363,7 +363,7 @@ class Calculations(object):
         self.set_camera_details()
         self.set_survey_type_details() 
 
-        print("Area size in calculations "+str(self.area_size))
+        # print("Area size in calculations "+str(self.area_size))
 
     def __str__(self):
         return "Camera id" +str(self.camera_id)+ "Survey id "+str(self.survey_type_id)+"Battery"+str(self.bttry_capacity)
@@ -435,7 +435,7 @@ class Calculations(object):
         return self.get_image_spacing_lateral()
 
     def get_num_of_lines(self):
-        print("Num of lines "+str(ceil(self.get_polygon()/self.get_line_spacing())))
+        # print("Num of lines "+str(ceil(self.get_polygon()/self.get_line_spacing())))
         return ceil(self.get_polygon()/self.get_line_spacing())
 
     def get_turn_distance(self):
