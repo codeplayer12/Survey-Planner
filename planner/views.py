@@ -92,11 +92,11 @@ def index(request):
             flight_time = 0
             cruise_speed = 0
             if selected_drone.name == 'Custom':
-                flight_time = float(request.POST["flight_time"])
+                flight_time = float(request.POST["flight_time_hidden"])
                 print()
                 print(flight_time)  
                 print('*****')  
-                cruise_speed = float(request.POST["cruise_speed"])
+                cruise_speed = float(request.POST["cruise_speed_hidden"])
                 print("Received values are flight time "+str(flight_time)+ " cruise speed "+str(cruise_speed))
                 # Save the new custom values to the database so that they can be sent back correctly to the UI
                 custom_drone = Drone.objects.get(name='Custom')
