@@ -112,8 +112,8 @@ def index(request):
             #Check if the survey type is Custom and set appropriate values
             selected_survey = SurveyType.objects.get(id=survey_type_id)
             if selected_survey.name == 'Custom':
-                forward = float(request.POST["custom_forward"])
-                lateral = float(request.POST["custom_lateral"])
+                forward = float(request.POST["forward"])
+                lateral = float(request.POST["lateral"])
                 # Save the new custom values to the database so that they can be sent back correctly to the UI
                 modifiedSurvey =  SurveyType.objects.get(name='Custom')
                 modifiedSurvey.forward=forward
