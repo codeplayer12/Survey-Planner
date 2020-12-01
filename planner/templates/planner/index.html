@@ -175,7 +175,7 @@
               <input type="number" class="form-control" min="0" disabled value="{{ select_drone.flightTime}}"
                 id="flightTime">
                 <input type="number" class="form-control" min="0" value="{{ select_drone.flightTime}}"
-                name="flight_time" hidden>
+                id="flight_time_hidden" name="flight_time_hidden" hidden>
             </div>
           </div>
           <div class="form-group row">
@@ -184,7 +184,7 @@
               <input type="number" class="form-control" min="0" disabled value="{{ select_drone.cruiseSpeed}}"
                 id="cruiseSpeed">
               <input type="number" class="form-control" min="0" value="{{ select_drone.cruiseSpeed}}"
-                name="cruise_speed" hidden>  
+              id="cruise_speed_hidden" name="cruise_speed_hidden" hidden>  
             </div>
           </div>
           <div class="form-group row">
@@ -282,6 +282,7 @@
 
           //Make the settings when the page initially loads
           if($("#drone").find("option:selected").text()=='Custom'){
+            // $("#state").attr("readonly", true);
             $('#flightTime').prop( "disabled", false);
             $('#cruiseSpeed').prop( "disabled", false);
           }else{   
@@ -298,6 +299,8 @@
             $('#forward').prop( "disabled", true);
             $('#lateral').prop( "disabled", true);
         }
+
+        
       });
 
 
@@ -392,14 +395,18 @@
       });
       
       $('.test').on('change focusout',function (e){
+        console.log("Flight time is : "+$('#flightTime').val());
+        console.log("Cruise speed is : "+  $('#cruiseSpeed').val());
+        // prompt("My message").show();
+
        var data = $(this).serialize();
        $.ajax({
          type: 'POST',
          url:"{% url 'index' %}",
          data: data,
          beforeSend: function(){
-          $('#mission-estimate-content').hide();
-          $('#loader').show();
+          // $('#mission-estimate-content').hide();
+          // $('#loader').show();
             // $('#progressModal').modal("show");
          },
          success: function(response){
@@ -418,12 +425,34 @@
          },
          complete:function(data){
           // $('#progressModal').modal("hide");
-          $('#loader').hide();
-          $('#mission-estimate-content').show();
+          // $('#loader').hide();
+          // $('#mission-estimate-content').show();
           
          }
        })
      });
+
+     // Instead of using the input that is disabled, use the hidden input 
+     $("#flightTime").on("change",function() {
+          $('#flight_time_hidden').val($("#flightTime").val());
+          // $('#cruiseSpeed').val(drone.cruise_speed);
+      });
+
+      $("#cruiseSpeed").on("change",function() {
+          $('#cruise_speed_hidden').val($("#cruiseSpeed").val());
+          // $('#cruiseSpeed').val(drone.cruise_speed);
+      });
+
+      $("#forward").on("change",function() {
+          $('#custom_forward').val($("#forward").val());
+          // $('#cruiseSpeed').val(drone.cruise_speed);
+      });
+
+      $("#lateral").on("change",function() {
+          $('#custom_lateral').val($("#lateral").val());
+          // $('#cruiseSpeed').val(drone.cruise_speed);
+      });
+
     });
     
 
