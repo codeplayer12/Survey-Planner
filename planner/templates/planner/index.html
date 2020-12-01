@@ -405,8 +405,8 @@
          url:"{% url 'index' %}",
          data: data,
          beforeSend: function(){
-          $('#mission-estimate-content').hide();
-          $('#loader').show();
+          // $('#mission-estimate-content').hide();
+          // $('#loader').show();
             // $('#progressModal').modal("show");
          },
          success: function(response){
@@ -425,8 +425,8 @@
          },
          complete:function(data){
           // $('#progressModal').modal("hide");
-          $('#loader').hide();
-          $('#mission-estimate-content').show();
+          // $('#loader').hide();
+          // $('#mission-estimate-content').show();
           
          }
        })
