@@ -25,7 +25,7 @@ SECRET_KEY = '7nszsw^^ny#dxhj0n#m=jz^py^c^4yj_p5a=7p%ml66u&m5$5n'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['codeplayer12.pythonanywhere.com']
+ALLOWED_HOSTS = ['codeplayer12.pythonanywhere.com','127.0.0.1']
 
 
 # Application definition

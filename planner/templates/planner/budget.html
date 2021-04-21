@@ -56,10 +56,10 @@
                 <td>Ground Survey</td>
                 {% for budget_item_cost in budget_item_costs %}
                     {% if  budget_item_cost.budget_item.name == 'Ground Survey' %}        
-                <td><input type="number" class="form-control" min="0" name="ground_days" id="ground_days" max="100" readonly value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" name="ground_unit" id="ground_unit" value ={{budget_item_cost.units}} readonly></td>
-                <td><input type="number" class="form-control" min="0" name="ground_unit_cost" id="ground_unit_cost" value ={{budget_item_cost.unitCost}} readonly></td>
-                <td><input type="number" class="form-control" min="0" name="ground_total" id="ground_total" readonly value ={{budget_item_cost.totalCost}}></td>
+                <td><input type="number" class="form-control" min="0" name="ground_days" id="ground_days" max="100" value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" name="ground_unit" id="ground_unit" value ={{budget_item_cost.units}} ></td>
+                <td><input type="number" class="form-control" min="0" name="ground_unit_cost" id="ground_unit_cost" value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" name="ground_total" id="ground_total" value ={{budget_item_cost.totalCost}}></td>
                   {% endif %}
                 {% endfor %} 
               </tr>
@@ -143,7 +143,7 @@
                 {% if  budget_item_cost.budget_item.name == 'Drone Rental' %}
                 <td><input type="number" class="form-control" min="0" id="drone_r_days" name="drone_r_days" max="100" readonly value ={{budget_item_cost.days}}></td>
                 <td><input type="number" class="form-control" min="0" id="drone_r_unit" name="drone_r_unit" value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" id="drone_r_unit_cost" name="drone_r_unit_cost" readonly value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="drone_r_unit_cost" name="drone_r_unit_cost" value ={{budget_item_cost.unitCost}}></td>
                 <td><input type="number" class="form-control" min="0" id="drone_r_total" name="drone_r_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %} 
@@ -155,7 +155,7 @@
                 {% if  budget_item_cost.budget_item.name == 'Laptop Rental' %}
                 <td><input type="number" class="form-control" min="0" id="laptop_r_days" name="laptop_r_days" max="100" readonly value ={{budget_item_cost.days}}></td>
                 <td><input type="number" class="form-control" min="0" id="laptop_r_unit_cost" name="laptop_r_unit_cost" value ={{budget_item_cost.units}}></td>
-                <td><input type="number" class="form-control" min="0" id="laptop_r_unit" name="laptop_r_unit" readonly value ={{budget_item_cost.unitCost}}></td>
+                <td><input type="number" class="form-control" min="0" id="laptop_r_unit" name="laptop_r_unit" value ={{budget_item_cost.unitCost}}></td>
                 <td><input type="number" class="form-control" min="0" id="laptop_r_total" name="laptop_r_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
                 {% endfor %} 
@@ -209,8 +209,8 @@
                 <td>Local travel</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Local Travel' %}
-                <td><input type="number" class="form-control" min="0" id="travel_days" name="travel_days" max="100" readonly value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" id="travel_unit" name="travel_unit" readonly value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="travel_days" name="travel_days" max="100" readonly hidden value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" id="travel_unit" name="travel_unit" readonly hidden value ={{budget_item_cost.units}}></td>
                 <td><input type="number" class="form-control" min="0" id="travel_unit_cost" name="travel_unit_cost" value ={{budget_item_cost.unitCost}}></td>
                 <td><input type="number" class="form-control" min="0" id="travel_total" name="travel_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
@@ -221,8 +221,8 @@
                 <td>Local accomodation and per diem</td>
                 {% for budget_item_cost in budget_item_costs %}
                 {% if  budget_item_cost.budget_item.name == 'Local accomodation and per diem' %}
-                <td><input type="number" class="form-control" min="0" id="accodomation_days"  name="accodomation_days" max="100" readonly value ={{budget_item_cost.days}}></td>
-                <td><input type="number" class="form-control" min="0" id="accodomation_unit" name="accodomation_unit" readonly value ={{budget_item_cost.units}}></td>
+                <td><input type="number" class="form-control" min="0" id="accodomation_days"  name="accodomation_days" max="100" hidden readonly value ={{budget_item_cost.days}}></td>
+                <td><input type="number" class="form-control" min="0" id="accodomation_unit" name="accodomation_unit" hidden readonly value ={{budget_item_cost.units}}></td>
                 <td><input type="number" class="form-control" min="0" id="accodomation_unit_cost" name="accodomation_unit_cost" value ={{budget_item_cost.unitCost}}></td>
                 <td><input type="number" class="form-control" min="0" id="accodomation_total" name="accodomation_total" readonly value ={{budget_item_cost.totalCost}}></td>
                 {% endif %}
@@ -358,7 +358,7 @@
         unit = $("[name='international_unit']").val();
         cost = $("[name='international_unit']").val();
 
-        console.log("Unit value "+unit+ " Cost "+ cost);
+        // console.log("Unit value "+unit+ " Cost "+ cost);
       });
     });
 

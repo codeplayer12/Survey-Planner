@@ -22,7 +22,7 @@ def home(request):
     select_drone = drones.get(id=planner_values.drone_id)
     select_camera = cameras.get(id=planner_values.camera_id)
     budget_estimate = BudgetEstimate.objects.get(name='Total')
-    print(budget_estimate)
+    # print(budget_estimate)
     return render(
         request,
         "planner/index.html",
@@ -56,7 +56,7 @@ def index(request):
             select_drone = drones.get(id=planner_values.drone_id)
             select_camera = cameras.get(id=planner_values.camera_id)
             budget_estimate = BudgetEstimate.objects.get(name='Total')
-            print(budget_estimate)
+            # print(budget_estimate)
             return render(
                 request,
                 "planner/index.html",
@@ -77,7 +77,7 @@ def index(request):
         else:
             # If there is a post because of new values posted by the user
             # We return JSON so that it can be handled well by javascript
-            print('---------HIT THE POST API METHOD HERE----------')
+            # print('---------HIT THE POST API METHOD HERE----------')
             drone_id = request.POST["drone"]
             camera_id = request.POST["camera"]
             survey_type_id = request.POST["survey_select"]
@@ -93,18 +93,18 @@ def index(request):
             cruise_speed = 0
             if selected_drone.name == 'Custom':
                 flight_time = float(request.POST["flight_time_hidden"])
-                print()
-                print(flight_time)  
-                print('*****')  
+                # print()
+                # print(flight_time)  
+                # print('*****')  
                 cruise_speed = float(request.POST["cruise_speed_hidden"])
-                print("Received values are flight time "+str(flight_time)+ " cruise speed "+str(cruise_speed))
+                # print("Received values are flight time "+str(flight_time)+ " cruise speed "+str(cruise_speed))
                 # Save the new custom values to the database so that they can be sent back correctly to the UI
                 custom_drone = Drone.objects.get(name='Custom')
                 custom_drone.cruiseSpeed = cruise_speed
                 custom_drone.flightTime = flight_time
                 custom_drone.save()
-                print("\n"+"New drone name "+ custom_drone.name + "Cruise speed "+str(custom_drone.cruiseSpeed) +"Flight time"+str(custom_drone.flightTime)+"\n")
-                print("Flight time : "+str(flight_time)+ "Cruise Speed : "+str(cruise_speed))
+                # print("\n"+"New drone name "+ custom_drone.name + "Cruise speed "+str(custom_drone.cruiseSpeed) +"Flight time"+str(custom_drone.flightTime)+"\n")
+                # print("Flight time : "+str(flight_time)+ "Cruise Speed : "+str(cruise_speed))
             else:
                 flight_time = selected_drone.flightTime
                 cruise_speed = selected_drone.cruiseSpeed
@@ -123,8 +123,8 @@ def index(request):
                 # custom_survey.lateral = lateral
                 # custom_survey.save()
                 custom_survey = SurveyType.objects.get(pk=selected_survey.id)
-                print("\n"+"New survey name "+ custom_survey.name + "forward "+str(custom_survey.forward) +"lateral"+str(custom_survey.lateral)+"\n")
-                print("Forward: " +str(forward)+ "Lateral : " +str(lateral))
+                # print("\n"+"New survey name "+ custom_survey.name + "forward "+str(custom_survey.forward) +"lateral"+str(custom_survey.lateral)+"\n")
+                # print("Forward: " +str(forward)+ "Lateral : " +str(lateral))
 
             # Calculate distance travelled per flight
 
@@ -132,7 +132,7 @@ def index(request):
                 flight_time * 60 * cruise_speed
             ) / (1 + (bttry_capacity / 100) + flight_height * (0.01 / 12.5))
 
-            print('Area size is '+str(area_size))
+            # print('Area size is '+str(area_size))
             # Perform non-budget calculations
             cal = Calculations(
                 camera_id,
@@ -192,7 +192,7 @@ def index(request):
             return JsonResponse({"data": data}, status=200) 
     else:              
         #If the method is a GET method, when the page is first hit
-        print('---------HIT THE GET METHOD HERE----------')
+        # print('---------HIT THE GET METHOD HERE----------')
         cameras = Camera.objects.all()
         drones = Drone.objects.all()
         surveys = SurveyType.objects.all()
@@ -237,7 +237,7 @@ def index(request):
             # cal.get_total_cost()
             budget_estimate = BudgetEstimate.objects.filter(name='Total')[0]
             # budget_estimate = BudgetEstimate.objects.all()[0]
-            print("Budget cost "+ str(budget_estimate.cost))
+            # print("Budget cost "+ str(budget_estimate.cost))
             return render(
                 request,
                 "planner/index.html",
@@ -259,7 +259,7 @@ def index(request):
 
 
 def area_calc(area, unit):
-    print('The unit is '+unit)
+    # print('The unit is '+unit)
     if unit == "kilometres":
         return area * 1000000
     elif unit == "hactares":
@@ -302,9 +302,9 @@ def budget_calc(request):
         selected_drone_id = request.POST["selected_drone"]
 
         selected_drone = Drone.objects.get(id=selected_drone_id)
-        print(selected_drone)
-        print(images_captured)
-        print(num_flights)
+        # print(selected_drone)
+        # print(images_captured)
+        # print(num_flights)
 
         # Get the default values
         budget_item_costs = BudgetItemCost.objects.all()
@@ -361,27 +361,27 @@ def budget_adjustment(request):
         # print(total)
 
         ground_survey_budget_item = BudgetItem.objects.get(name='Ground Survey')
-        print('Survey Budget Item')
-        print(ground_survey_budget_item)
-        print('Unit Cost')
+        # print('Survey Budget Item')
+        # print(ground_survey_budget_item)
+        # print('Unit Cost')
         ground_survey_cost_item = BudgetItemCost.objects.filter(budget_item=ground_survey_budget_item)[0]
         ground_survey_cost_item.days = ground_days
         ground_survey_cost_item.unitCost = ground_unit_cost
         ground_survey_cost_item.units = ground_unit
         ground_survey_cost_item.totalCost = Calculations.sum(float(ground_days),float(ground_unit), float(ground_unit_cost))
         ground_survey_cost_item.save()
-        print(ground_survey_cost_item.unitCost)
+        # print(ground_survey_cost_item.unitCost)
 
         # International Support
         international_days = request.POST["international_days"]
         international_unit = request.POST["international_unit"]
         international_unit_cost = request.POST["international_unit_cost"]
         totalCost = Calculations.sum(float(international_days),float(international_unit), float(international_unit_cost))
-        print()
+        # print()
 
         international_budget_item = BudgetItem.objects.get(name='International support')
         international_cost_item = BudgetItemCost.objects.filter(budget_item=international_budget_item)[0]
-        print(international_cost_item)
+        # print(international_cost_item)
         international_cost_item.days = international_days
         international_cost_item.unitCost = international_unit_cost
         international_cost_item.units = international_unit
@@ -447,8 +447,8 @@ def budget_adjustment(request):
         laptop_r_unit = request.POST["laptop_r_unit"]
         laptop_r_unit_cost = request.POST["laptop_r_unit_cost"]
         t1 = Calculations.sum(float(laptop_r_days),float(laptop_r_unit), float(laptop_r_unit_cost))
-        print(' -'+ laptop_r_days+' '+laptop_r_unit+' '+laptop_r_unit_cost)
-        print(t1)
+        # print(' -'+ laptop_r_days+' '+laptop_r_unit+' '+laptop_r_unit_cost)
+        # print(t1)
 
 
         laptop_budget_item = BudgetItem.objects.get(name='Laptop Rental')
@@ -550,8 +550,8 @@ def budget_adjustment(request):
         sub_total_cost = BudgetEstimate.objects.get(name='SubTotal')
         sub_total_cost.cost = sub_total
         sub_total_cost.save()
-        print('subtotal ')
-        print(sub_total)
+        # print('subtotal ')
+        # print(sub_total)
 
         # # Project Management 10%
         # project_m_unit = request.POST["project_m_unit"]
@@ -565,8 +565,8 @@ def budget_adjustment(request):
         project_management_cost.totalCost = projectmanagement_per
         project_management_cost.unitCost = project_m_unit_cost
         project_management_cost.save()
-        print("10% of subtotal Project Management")
-        print(Calculations.sum(float(project_m_unit_cost),float(sub_total)))
+        # print("10% of subtotal Project Management")
+        # print(Calculations.sum(float(project_m_unit_cost),float(sub_total)))
       
         # # Project Overhead 15%
         # project_o_unit = request.POST["project_o_unit"]
@@ -581,13 +581,13 @@ def budget_adjustment(request):
         project_overhead_cost.totalCost = project_overhead_per
         project_management_cost.unitCost = project_o_unit_cost
         project_overhead_cost.save()
-        print("5% of subtotal Project Overhead")
-        print(Calculations.sum(float(project_o_unit_cost),float(sub_total)))
+        # print("5% of subtotal Project Overhead")
+        # print(Calculations.sum(float(project_o_unit_cost),float(sub_total)))
         # Calculate total before saving default value
         # sum_totals(project_o_unit,  project_o_unit_cost)
 
         # Ultimate total to save in db
-        print("Sum total")
+        # print("Sum total")
         sum_total = Calculations.total_sum(float(sub_total),float(projectmanagement_per), float(project_overhead_per))
         # estimate = Department.objects.get('Other')
 
@@ -603,7 +603,7 @@ def budget_adjustment(request):
         # project_overhead_cost.save()
 
         calc = BudgetCalculations(1,1)
-        print(calc)
+        # print(calc)
         calc.get_total_cost()
         budget_item_costs = BudgetItemCost.objects.all().values('budget_item__name', 'days', 'id', 'totalCost', 'unitCost', 'units')
         department_costs = DepartmentCost.objects.all().values('id', 'department__name', 'total_Cost')
